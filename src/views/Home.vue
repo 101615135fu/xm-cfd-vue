@@ -8,7 +8,47 @@
         </div>
         <nav class="nav-links">
           <router-link to="/" class="nav-link">首页</router-link>
-          <router-link to="/discover" class="nav-link">发现</router-link>
+          
+          <!-- 发现导航项带下拉菜单 -->
+          <div class="dropdown-container">
+            <router-link to="/discover" class="nav-link">发现</router-link>
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <!-- 左侧分类菜单 -->
+                <div class="dropdown-categories">
+                  <div class="category-item">
+                    <a href="#" class="category-link">工作与生产力</a>
+                  </div>
+                  <div class="category-item">
+                    <a href="#" class="category-link">工程与开发</a>
+                  </div>
+                  <div class="category-item">
+                    <a href="#" class="category-link">设计与创意</a>
+                  </div>
+                  <div class="category-item">
+                    <a href="#" class="category-link">金融</a>
+                  </div>
+                  <div class="category-item">
+                    <a href="#" class="category-link">社交与社区</a>
+                  </div>
+                </div>
+                
+                <!-- 右侧内容区域 -->
+                <div class="dropdown-details">
+                  <h3>工作与生产力</h3>
+                  <div class="dropdown-links-grid">
+                    <a href="#" class="dropdown-link">AI笔记工具</a>
+                    <a href="#" class="dropdown-link">应用切换器</a>
+                    <a href="#" class="dropdown-link">合规软件</a>
+                    <a href="#" class="dropdown-link">日历应用</a>
+                    <a href="#" class="dropdown-link">项目管理软件</a>
+                    <a href="#" class="dropdown-link">更多</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <router-link to="/database" class="nav-link">数据库</router-link>
           <router-link to="/analysis" class="nav-link">分析</router-link>
         </nav>
@@ -55,6 +95,7 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
+  position: relative;
 }
 
 .navbar .container {
@@ -71,6 +112,7 @@
 .nav-links {
   display: flex;
   gap: 20px;
+  position: relative;
 }
 
 .nav-link {
@@ -79,6 +121,91 @@
   font-weight: 500;
 }
 
+/* 下拉菜单样式 */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: -200px; /* 调整位置使下拉菜单居中 */
+  width: 800px;
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 100;
+  margin-top: 15px;
+}
+
+.dropdown-container:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdown-content {
+  display: flex;
+  padding: 20px;
+}
+
+.dropdown-categories {
+  width: 250px;
+  border-right: 1px solid #eee;
+  padding-right: 20px;
+}
+
+.category-item {
+  margin-bottom: 15px;
+}
+
+.category-link {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.category-link:hover {
+  background-color: #f5f8fa;
+  color: #0a2540;
+}
+
+.dropdown-details {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.dropdown-details h3 {
+  margin-bottom: 15px;
+  color: #0a2540;
+  font-size: 18px;
+}
+
+.dropdown-links-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.dropdown-link {
+  color: #4a5568;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.dropdown-link:hover {
+  color: #0a2540;
+  text-decoration: underline;
+}
+
+/* 其他样式保持不变 */
 .auth-buttons {
   display: flex;
   gap: 10px;
@@ -103,7 +230,6 @@
   color: white;
 }
 
-/* 主要内容区域样式 */
 .main-content {
   flex: 1;
 }
