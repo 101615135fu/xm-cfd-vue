@@ -7,29 +7,32 @@
           <h1>XM-CFD</h1>
         </div>
         <nav class="nav-links">
-          <router-link to="/" class="nav-link">首页</router-link>
+          <router-link to="/main/dashboard" class="nav-link">首页</router-link>
           
           <!-- 发现导航项带下拉菜单 -->
           <div class="dropdown-container">
-            <router-link to="/discover" class="nav-link">发现</router-link>
+            <router-link to="/main/dashboard" class="nav-link">发现</router-link>
             <div class="dropdown-menu">
               <div class="dropdown-content">
                 <!-- 左侧分类菜单 -->
                 <div class="dropdown-categories">
                   <div class="category-item">
-                    <a href="#" class="category-link">工作与生产力</a>
+                    <router-link to="/category/productivity" class="category-link">工作与生产力</router-link>
                   </div>
                   <div class="category-item">
-                    <a href="#" class="category-link">工程与开发</a>
+                    <router-link to="/category/development" class="category-link">工程与开发</router-link>
                   </div>
                   <div class="category-item">
-                    <a href="#" class="category-link">设计与创意</a>
+                    <router-link to="/category/design" class="category-link">设计与创意</router-link>
                   </div>
                   <div class="category-item">
-                    <a href="#" class="category-link">金融</a>
+                    <router-link to="/category/finance" class="category-link">金融</router-link>
                   </div>
                   <div class="category-item">
-                    <a href="#" class="category-link">社交与社区</a>
+                    <router-link to="/category/social" class="category-link">社交与社区</router-link>
+                  </div>
+                  <div class="category-item">
+                    <router-link to="/category/ai-coding" class="category-link">AI编程</router-link>
                   </div>
                 </div>
                 
@@ -37,20 +40,20 @@
                 <div class="dropdown-details">
                   <h3>工作与生产力</h3>
                   <div class="dropdown-links-grid">
-                    <a href="#" class="dropdown-link">AI笔记工具</a>
-                    <a href="#" class="dropdown-link">应用切换器</a>
-                    <a href="#" class="dropdown-link">合规软件</a>
-                    <a href="#" class="dropdown-link">日历应用</a>
-                    <a href="#" class="dropdown-link">项目管理软件</a>
-                    <a href="#" class="dropdown-link">更多</a>
+                    <a @click.prevent="navigateToProduct('ai-notes')" class="dropdown-link">AI笔记工具</a>
+                    <a @click.prevent="navigateToProduct('app-switcher')" class="dropdown-link">应用切换器</a>
+                    <a @click.prevent="navigateToProduct('compliance')" class="dropdown-link">合规软件</a>
+                    <a @click.prevent="navigateToProduct('calendar')" class="dropdown-link">日历应用</a>
+                    <a @click.prevent="navigateToProduct('project-management')" class="dropdown-link">项目管理软件</a>
+                    <a @click.prevent="navigateToProduct('cursor')" class="dropdown-link">Cursor</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           
-          <router-link to="/database" class="nav-link">数据库</router-link>
-          <router-link to="/analysis" class="nav-link">分析</router-link>
+          <router-link to="/main/dashboard" class="nav-link">数据库</router-link>
+          <router-link to="/main/dashboard" class="nav-link">分析</router-link>
         </nav>
         <div class="auth-buttons">
           <button class="btn btn-login">登录</button>
@@ -67,7 +70,14 @@
 </template>
 
 <script setup>
-// 这里可以添加需要的逻辑
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+// 添加导航到产品详情页的方法
+const navigateToProduct = (productId) => {
+  router.push({ name: 'product-detail', params: { id: productId } });
+};
 </script>
 
 <style scoped>
@@ -193,7 +203,9 @@
   gap: 15px;
 }
 
+/* 修改下拉链接样式，添加鼠标指针 */
 .dropdown-link {
+  cursor: pointer;
   color: #4a5568;
   text-decoration: none;
   font-size: 14px;

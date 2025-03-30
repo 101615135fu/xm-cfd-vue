@@ -9,10 +9,15 @@ const router = createRouter({
     {
       path: '/main', name: 'home', component: () => import('../views/Home.vue'), children: [
         { path: 'dashboard', name: 'dashboard', component: () => import('../views/Dashboard.vue') },
-        // { path: 'discover', name: 'discover', component: () => import('../views/Discover.vue') },
-        // { path: 'analysis', name: 'analysis', component: () => import('../views/Analysis.vue') },
       ]
     },
+    // 添加产品详情页路由
+    {
+      path: '/product/:id', name: 'product-detail', component: () => import('../views/Products.vue'),props: true
+    },
+    {
+      path: '/category/:category?',name: 'category',component: () => import('../views/Category.vue'),props: true
+    }
   ],
 })
 
