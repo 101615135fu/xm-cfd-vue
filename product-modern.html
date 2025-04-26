@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>星核科技 - 未来产品</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    :root {
+      --primary: #6d28d9;
+      --secondary: #8b5cf6;
+      --accent: #10b981;
+      --dark: #0f172a;
+      --light: #f1f5f9;
+      --gradient: linear-gradient(135deg, #6d28d9, #10b981);
+    }
+
+    body {
+      background-color: var(--dark);
+      color: var(--light);
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 80% 10%, rgba(109, 40, 217, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.15) 0%, transparent 30%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo::before {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-right: 8px;
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+    }
+
+    nav ul li {
+      margin-left: 40px;
+      position: relative;
+    }
+
+    nav ul li a {
+      color: var(--light);
+      text-decoration: none;
+      font-size: 16px;
+      transition: all 0.3s;
+      opacity: 0.8;
+    }
+
+    nav ul li a:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+
+    .grid-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+                         linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      z-index: -1;
+    }
+
+    .hero-content {
+      width: 50%;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    h1 {
+      font-size: 60px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.1;
+      letter-spacing: -1px;
+    }
+
+    h1 span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      opacity: 0.8;
+      max-width: 550px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 30px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: white;
+      box-shadow: 0 5px 15px rgba(109, 40, 217, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(109, 40, 217, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--light);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .product-image {
+      position: absolute;
+      right: -5%;
+      width: 55%;
+      height: 80%;
+      background: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000') center center no-repeat;
+      background-size: contain;
+      transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
+      transition: transform 0.5s;
+      filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.3));
+      z-index: 1;
+    }
+
+    .product-image::before {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 10%;
+      width: 80%;
+      height: 80%;
+      background: var(--gradient);
+      filter: blur(100px);
+      opacity: 0.2;
+      z-index: -1;
+    }
+
+    .product-image:hover {
+      transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+    }
+
+    .features {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 80px;
+      position: relative;
+    }
+
+    .section-subtitle {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--secondary);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .section-title h2 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title h2 span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: var(--gradient);
+      border-radius: 3px;
+    }
+
+    .section-title p {
+      font-size: 18px;
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 40px 30px;
+      transition: all 0.4s;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient);
+      opacity: 0;
+      transition: opacity 0.4s;
+      z-index: -1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-15px);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-card:hover::before {
+      opacity: 0.05;
+    }
+
+    .feature-icon-container {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      position: relative;
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .feature-card p {
+      opacity: 0.7;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .pattern {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background-image: radial-gradient(rgba(139, 92, 246, 0.3) 2px, transparent 2px);
+      background-size: 20px 20px;
+      opacity: 0.1;
+      z-index: -1;
+    }
+
+    .pattern-1 {
+      top: 10%;
+      left: 5%;
+    }
+
+    .pattern-2 {
+      bottom: 10%;
+      right: 5%;
+    }
+
+    .cta {
+      padding: 100px 0;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(139, 92, 246, 0.5), transparent);
+    }
+
+    .cta::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(139, 92, 246, 0.5), transparent);
+    }
+
+    .cta h2 {
+      font-size: 42px;
+      margin-bottom: 20px;
+    }
+
+    .cta h2 span {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cta p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+      opacity: 0.8;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 60px 0;
+      text-align: center;
+      opacity: 0.7;
+      font-size: 14px;
+    }
+
+    @media (max-width: 992px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 42px;
+      }
+
+      .hero-content {
+        width: 100%;
+        text-align: center;
+        padding: 0 20px;
+      }
+
+      .hero p {
+        margin: 0 auto 40px auto;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .product-image {
+        display: none;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">星核科技</div>
+      <nav>
+        <ul>
+          <li><a href="#">首页</a></li>
+          <li><a href="#">产品</a></li>
+          <li><a href="#">功能</a></li>
+          <li><a href="#">联系我们</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="grid-background"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">全新发布</div>
+        <h1>智能未来 <span>已经到来</span></h1>
+        <p>颠覆传统科技边界，引领人工智能新纪元。我们的产品将改变您与科技互动的方式，为生活带来前所未有的便捷与高效。</p>
+        <div class="buttons">
+          <a href="#" class="btn btn-primary">立即体验</a>
+          <a href="#" class="btn btn-secondary">了解更多</a>
+        </div>
+      </div>
+      <div class="product-image"></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="pattern pattern-1"></div>
+    <div class="pattern pattern-2"></div>
+    <div class="container">
+      <div class="section-title">
+        <div class="section-subtitle">突破创新</div>
+        <h2>未来科技<span>核心优势</span></h2>
+        <p>集成前沿技术，打造全方位智能体验</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">⚡</div>
+          </div>
+          <h3>量子级性能</h3>
+          <p>采用新一代量子处理芯片，运算速度提升1000%，轻松应对复杂任务，实现真正的多任务处理。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🔒</div>
+          </div>
+          <h3>生物识别安全</h3>
+          <p>多重生物识别技术结合，包括面部、指纹和视网膜扫描，为您的数据提供银行级别的安全保障。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🧠</div>
+          </div>
+          <h3>自学习AI</h3>
+          <p>内置自学习人工智能系统，能够根据您的使用习惯不断优化，提供个性化的使用体验。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">🌐</div>
+          </div>
+          <h3>全息投影</h3>
+          <p>突破性的全息投影技术，让您可以与数字内容进行空间交互，实现真正的沉浸式体验。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">⚙️</div>
+          </div>
+          <h3>模块化设计</h3>
+          <p>创新的模块化结构设计，可根据需求自由扩展功能，一款产品满足多种应用场景。</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-container">
+            <div class="feature-icon">♾️</div>
+          </div>
+          <h3>无限连接</h3>
+          <p>支持所有主流智能设备连接，打造完整智能生态系统，让您的数字生活无缝衔接。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <h2>准备好<span>迎接未来</span>了吗？</h2>
+      <p>加入星核科技的创新行列，成为科技革命的先行者。限时预购可享受独家优惠和专属服务。</p>
+      <a href="#" class="btn btn-primary">立即预订</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2024 星核科技 版权所有 | 隐私政策 | 使用条款</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 特性卡片动画
+      const featureCards = document.querySelectorAll('.feature-card');
+      
+      function checkVisibility() {
+        featureCards.forEach(card => {
+          const cardPosition = card.getBoundingClientRect().top;
+          const screenPosition = window.innerHeight / 1.2;
+          
+          if(cardPosition < screenPosition) {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }
+        });
+      }
+      
+      // 初始化卡片样式
+      featureCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(50px)';
+        card.style.transition = `all 0.5s ease ${index * 0.1}s`;
+      });
+      
+      // 监听滚动事件
+      window.addEventListener('scroll', checkVisibility);
+      
+      // 初始检查
+      checkVisibility();
+      
+      // 悬停效果增强
+      const productImage = document.querySelector('.product-image');
+      
+      document.addEventListener('mousemove', (e) => {
+        const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+        const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+        productImage.style.transform = `perspective(1000px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+      });
+    });
+  </script>
+</body>
+</html> 

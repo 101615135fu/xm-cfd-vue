@@ -1,13 +1,42 @@
 <template>
   <div class="dashboard">
-    <!-- 保留现有的hero-section -->
+    <!-- 英雄区域 -->
     <div class="hero-section">
+      <div class="hero-bg-overlay"></div>
       <div class="container">
-        <h2 class="hero-title">发现最佳AI编程工具</h2>
-        <p class="hero-subtitle">探索提升开发效率的AI编程助手、代码生成器和开发工具</p>
+        <h2 class="hero-title">发现顶尖<span class="highlight">AI工具</span></h2>
+        <p class="hero-subtitle">探索2024年最受欢迎的AI应用、大语言模型和开发工具</p>
         <div class="search-box">
-          <input type="text" placeholder="搜索AI编程工具..." v-model="searchQuery" />
-          <button class="search-btn">搜索</button>
+          <input type="text" placeholder="搜索AI工具..." v-model="searchQuery" />
+          <button class="search-btn">
+            <i class="el-icon-search"></i>
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-value">4,500+</span>
+            <span class="stat-label">AI工具</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">120万+</span>
+            <span class="stat-label">用户</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">每日更新</span>
+            <span class="stat-label">最新数据</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 趋势分类 -->
+    <div class="category-tabs">
+      <div class="container">
+        <div class="tab-container">
+          <button class="tab-btn active">热门推荐</button>
+          <button class="tab-btn">最新上线</button>
+          <button class="tab-btn">评分最高</button>
+          <button class="tab-btn">免费工具</button>
         </div>
       </div>
     </div>
@@ -18,7 +47,7 @@
         <div class="filter-options">
           <div class="filter-group">
             <span class="filter-label">排序:</span>
-            <el-select v-model="sortOption" placeholder="热门" size="small">
+            <el-select v-model="sortOption" placeholder="热门" size="small" style="min-width: 120px;">
               <el-option label="热门" value="popular"></el-option>
               <el-option label="最新" value="newest"></el-option>
               <el-option label="评分最高" value="highest_rated"></el-option>
@@ -26,7 +55,7 @@
           </div>
           <div class="filter-group">
             <span class="filter-label">时间:</span>
-            <el-select v-model="timeOption" placeholder="全部时间" size="small">
+            <el-select v-model="timeOption" placeholder="全部时间" size="small" style="min-width: 120px;">
               <el-option label="今天" value="today"></el-option>
               <el-option label="本周" value="this_week"></el-option>
               <el-option label="本月" value="this_month"></el-option>
@@ -41,6 +70,7 @@
             :effect="selectedTags.includes(tag) ? 'dark' : 'plain'"
             @click="toggleTag(tag)"
             class="filter-tag"
+            :class="{'selected-tag': selectedTags.includes(tag)}"
           >
             {{ tag }}
           </el-tag>
@@ -62,13 +92,20 @@
               <img :src="product.image || 'https://via.placeholder.com/80'" :alt="product.name">
             </div>
             <div class="product-info">
-              <h3 class="product-name">{{ product.name }}</h3>
+              <div class="product-header">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <span class="product-rank">#{{ index + 1 }}</span>
+              </div>
               <p class="product-description">{{ product.description }}</p>
               <div class="product-tags">
-                <el-tag v-for="tag in product.tags" :key="tag" size="small" effect="plain">{{ tag }}</el-tag>
+                <el-tag v-for="tag in product.tags" :key="tag" size="small" effect="plain" class="product-tag">{{ tag }}</el-tag>
               </div>
             </div>
             <div class="product-meta">
+              <div class="product-rating">
+                <span class="rating-star">★</span>
+                <span class="rating-value">{{ product.rating || (Math.random() * 0.5 + 4.3).toFixed(1) }}</span>
+              </div>
               <div class="upvotes">
                 <el-button type="primary" plain size="small" class="upvote-btn" @click.stop>
                   <i class="el-icon-caret-top"></i> {{ product.upvotes || 0 }}
@@ -83,7 +120,7 @@
         
         <!-- 加载更多按钮 -->
         <div class="load-more">
-          <el-button plain>加载更多</el-button>
+          <el-button plain>探索更多AI工具</el-button>
         </div>
       </div>
     </section>
@@ -93,6 +130,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { financialApi } from '../utils/api';
 
 const router = useRouter();
 
@@ -104,7 +142,7 @@ const isLoading = ref(false);
 const searchQuery = ref('');
 const sortOption = ref('popular');
 const timeOption = ref('all_time');
-const tags = ref(['AI编程', '代码生成', '代码补全', '开发工具', '免费工具', '多语言支持', 'AWS', '云开发', '在线IDE']);
+const tags = ref(['大语言模型', 'AI编程', '文本转语音', '语音AI', 'AI基础设施', '图像生成', '创作工具', '聊天机器人', '开发工具']);
 const selectedTags = ref([]);
 
 // 切换标签选择
@@ -115,6 +153,17 @@ const toggleTag = (tag) => {
     selectedTags.value.push(tag);
   }
 };
+
+const load = () => {
+  financialApi.getAllItems().then(response => {
+    products.value = response.data;
+    console.log(products.value);
+  }).catch(error => {
+    console.error('获取数据失败:', error);
+  });
+}
+
+load();
 
 // 过滤产品
 const filteredProducts = computed(() => {
@@ -143,8 +192,7 @@ const filteredProducts = computed(() => {
     // 假设有日期字段，这里简化处理
     result = [...result].reverse();
   } else if (sortOption.value === 'highest_rated') {
-    // 假设有评分字段，这里用upvotes代替
-    result = [...result].sort((a, b) => b.upvotes - a.upvotes);
+    result = [...result].sort((a, b) => (b.rating || 4.5) - (a.rating || 4.5));
   }
   
   return result;
@@ -155,69 +203,113 @@ const loadExcelData = async () => {
   try {
     isLoading.value = true;
     
-    // 方法1: 从服务器加载Excel文件
-    // const data = await ExcelDataService.loadFromServer('/api/excel/ai-coding.xlsx');
-    
-    // 方法2: 使用模拟数据（如果无法从服务器加载）
+    // 模拟从Product Hunt获取的数据
     const data = [
       {
-        name: "GitHub Copilot",
-        description: "AI编程助手，可以根据注释和上下文生成代码",
-        image: "https://ph-files.imgix.net/b7c1e0e7-bda6-4d7d-9348-82a23cc4e3fd.png?auto=format",
-        tags: "AI编程,代码生成,开发工具",
+        name: "OpenAI",
+        description: "构建AI产品的强大平台，由行业领先的模型和工具提供支持",
+        image: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/openai-icon.svg",
+        tags: ["AI基础设施", "开发工具", "大语言模型"],
+        upvotes: 4324,
+        comments: 71,
+        rating: 4.6
+      },
+      {
+        name: "ChatGPT",
+        description: "获取答案，寻找灵感，提高生产力的AI助手",
+        image: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openai.svg",
+        tags: ["聊天机器人", "大语言模型", "AI助手"],
+        upvotes: 3985,
+        comments: 759,
+        rating: 4.7
+      },
+      {
+        name: "Claude",
+        description: "一系列基础性AI模型，可靠、可解释、可控",
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg",
+        tags: ["大语言模型", "AI助手", "聊天机器人"],
+        upvotes: 3254,
+        comments: 100,
+        rating: 4.8
+      },
+      {
+        name: "Anthropic",
+        description: "Anthropic AI研究公司旨在构建可靠、可解释和可控的AI系统",
+        image: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/claude-ai-icon.png",
+        tags: ["AI基础设施", "大语言模型", "AI研究"],
+        upvotes: 2854,
+        comments: 8,
+        rating: 4.5
+      },
+      {
+        name: "ElevenLabs",
+        description: "即时创建任何语言的自然AI语音",
+        image: "https://upload.wikimedia.org/wikipedia/commons/e/e2/ElevenLabs_logo_%282022-2024%29.png",
+        tags: ["文本转语音", "AI声音", "创作工具"],
         upvotes: 2543,
-        comments: 127
+        comments: 49,
+        rating: 4.8
       },
       {
-        name: "Cursor",
-        description: "基于AI的代码编辑器，帮助开发者更快地编写和理解代码",
-        image: "https://ph-files.imgix.net/a3a6b51c-d233-4d5d-a64d-9e1b6b96d17c.png?auto=format",
-        tags: "代码编辑器,AI编程,开发工具",
-        upvotes: 1876,
-        comments: 93
+        name: "Langchain",
+        description: "LangChain的产品套件支持AI开发",
+        image: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/langchain.svg",
+        tags: ["AI基础设施", "开发工具", "大语言模型"],
+        upvotes: 2345,
+        comments: 4,
+        rating: 5.0
       },
       {
-        name: "Codeium",
-        description: "免费的AI编程助手，提供代码补全和生成功能",
-        image: "https://ph-files.imgix.net/e6af34e1-a038-4978-b1f6-3d68e162ed74.png?auto=format",
-        tags: "AI编程,代码补全,免费工具",
-        upvotes: 1245,
-        comments: 78
+        name: "Gemini",
+        description: "Google对GPT-4的回应",
+        image: "https://ph-files.imgix.net/99b3e788-14c7-4bbb-97ea-d87c23c9318f.png?auto=format",
+        tags: ["大语言模型", "AI助手", "谷歌AI"],
+        upvotes: 2123,
+        comments: 40,
+        rating: 4.5
       },
       {
-        name: "Tabnine",
-        description: "AI代码助手，支持多种编程语言和IDE",
-        image: "https://ph-files.imgix.net/2e7e2f78-f57c-4f76-b3e3-e3a8d2dc0e39.png?auto=format",
-        tags: "AI编程,代码补全,多语言支持",
-        upvotes: 1102,
-        comments: 65
+        name: "Llama",
+        description: "Meta的开源LLM家族",
+        image: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/meta-llama.svg",
+        tags: ["大语言模型", "开源AI", "Meta AI"],
+        upvotes: 1976,
+        comments: 16,
+        rating: 4.8
       },
       {
-        name: "CodeWhisperer",
-        description: "Amazon的AI编程助手，为AWS开发者提供代码建议",
-        image: "https://ph-files.imgix.net/d1a51e2e-5f56-4c91-a4c3-5a5a8939e6f5.png?auto=format",
-        tags: "AI编程,AWS,云开发",
-        upvotes: 987,
-        comments: 54
+        name: "Intercom",
+        description: "AI优先的客户支持平台",
+        image: "https://ph-files.imgix.net/d5eb104d-b62a-4bbd-9d14-4586287d4a6c.png?auto=format",
+        tags: ["客户支持", "聊天机器人", "AI助手"],
+        upvotes: 1754,
+        comments: 567,
+        rating: 4.3
       },
       {
-        name: "Replit Ghostwriter",
-        description: "Replit平台的AI编程助手，帮助开发者快速编写代码",
-        image: "https://ph-files.imgix.net/f9e77f1b-5a5d-4b8e-a94a-9d1f8a9a5cb4.png?auto=format",
-        tags: "AI编程,在线IDE,代码生成",
-        upvotes: 856,
-        comments: 42
+        name: "Deepgram",
+        description: "为开发者设计的语音AI平台",
+        image: "https://ph-files.imgix.net/d8569aff-15af-4d9e-8095-08c1d1d3e0fa.png?auto=format",
+        tags: ["语音AI", "文本转语音", "AI语音代理"],
+        upvotes: 1650,
+        comments: 22,
+        rating: 4.4
       }
     ];
     
-    products.value = ExcelDataService.transformToProducts(data);
-    
-    // 提取所有标签
-    const allTags = new Set();
-    products.value.forEach(product => {
-      product.tags.forEach(tag => allTags.add(tag));
+    // 转换数据结构
+    products.value = data.map(item => {
+      return {
+        id: item.name.toLowerCase().replace(/\s+/g, '-'),
+        name: item.name,
+        description: item.description,
+        image: item.image,
+        tags: typeof item.tags === 'string' ? item.tags.split(',') : item.tags,
+        upvotes: item.upvotes,
+        comments: item.comments,
+        rating: item.rating
+      };
     });
-    tags.value = Array.from(allTags);
     
   } catch (error) {
     console.error('加载数据失败:', error);
@@ -238,116 +330,474 @@ const navigateToProduct = (productId) => {
 </script>
 
 <style scoped>
+/* 全局暗色科技风格 */
+.dashboard {
+  background-color: #0a0a16;
+  color: #e0e0ff;
+  position: relative;
+  min-height: 100vh;
+}
+
 /* 英雄部分样式 */
 .hero-section {
-  background-color: #f5f8fa;
-  padding: 80px 0;
+  background: linear-gradient(135deg, #050c20 0%, #0f1634 100%);
+  padding: 120px 0 100px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(0, 106, 255, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(94, 0, 255, 0.15) 0%, transparent 40%);
+  z-index: 1;
+}
+
+.hero-section .container {
+  position: relative;
+  z-index: 2;
 }
 
 .hero-title {
-  font-size: 36px;
-  color: #0a2540;
-  margin-bottom: 16px;
+  font-size: 52px;
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-shadow: 0 0 20px rgba(0, 162, 255, 0.3);
+}
+
+.hero-title .highlight {
+  background: linear-gradient(90deg, #00a2ff, #7000ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+
+.hero-title .highlight:after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00a2ff, #7000ff);
+  box-shadow: 0 0 10px rgba(112, 0, 255, 0.8);
 }
 
 .hero-subtitle {
-  font-size: 18px;
-  color: #4a5568;
+  font-size: 22px;
+  color: rgba(224, 224, 255, 0.9);
   margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  margin-top: 60px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #00a2ff;
+  margin-bottom: 8px;
+  text-shadow: 0 0 10px rgba(0, 162, 255, 0.5);
+}
+
+.stat-label {
+  font-size: 15px;
+  color: rgba(224, 224, 255, 0.7);
+  letter-spacing: 0.5px;
 }
 
 .search-box {
   display: flex;
   max-width: 600px;
   margin: 0 auto;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 140, 255, 0.3);
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 162, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.search-box:hover {
+  box-shadow: 0 0 40px rgba(0, 162, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 .search-box input {
   flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px 0 0 4px;
+  padding: 18px 24px;
+  border: none;
+  background: transparent;
   font-size: 16px;
+  color: #e0e0ff;
+}
+
+.search-box input::placeholder {
+  color: rgba(224, 224, 255, 0.5);
+}
+
+.search-box input:focus {
+  outline: none;
 }
 
 .search-btn {
-  padding: 12px 24px;
-  background-color: #0a2540;
+  padding: 0 30px;
+  background: linear-gradient(90deg, #00a2ff, #7000ff);
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0;
   cursor: pointer;
   font-weight: 500;
+  font-size: 20px;
+  transition: all 0.3s ease;
 }
 
-/* 趋势部分样式 */
-.trends-section {
-  padding: 60px 0;
+.search-btn:hover {
+  background: linear-gradient(90deg, #0066ff, #8c00ff);
 }
 
-.section-title {
-  font-size: 24px;
-  color: #0a2540;
-  margin-bottom: 24px;
-  text-align: center;
+/* 分类标签区域 */
+.category-tabs {
+  background-color: rgba(10, 12, 26, 0.85);
+  border-bottom: 1px solid rgba(0, 140, 255, 0.2);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
 }
 
-.trends-grid {
+.tab-container {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab-container::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  padding: 22px 28px;
+  background: transparent;
+  border: none;
+  color: rgba(224, 224, 255, 0.7);
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  letter-spacing: 0.5px;
+}
+
+.tab-btn:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #00a2ff, #7000ff);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(112, 0, 255, 0.6);
+}
+
+.tab-btn:hover {
+  color: #e0e0ff;
+}
+
+.tab-btn.active {
+  color: #00a2ff;
+}
+
+.tab-btn.active:after {
+  width: 100%;
+}
+
+/* 筛选部分样式 */
+.filter-section {
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(0, 140, 255, 0.1);
+  background-color: rgba(11, 13, 28, 0.7);
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  margin-right: 28px;
+}
+
+.filter-group :deep(.el-select) {
+  min-width: 120px;
+}
+
+.filter-label {
+  margin-right: 10px;
+  color: rgba(224, 224, 255, 0.7);
+  font-size: 14px;
+}
+
+.tags-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filter-tag {
+  cursor: pointer;
+  background-color: rgba(0, 140, 255, 0.08) !important;
+  border-color: rgba(0, 140, 255, 0.3) !important;
+  color: rgba(224, 224, 255, 0.9) !important;
+  transition: all 0.3s ease;
+  padding: 8px 15px !important;
+  border-radius: 8px !important;
+}
+
+.filter-tag:hover {
+  background-color: rgba(0, 140, 255, 0.15) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.selected-tag {
+  background-color: rgba(0, 140, 255, 0.25) !important;
+  color: #ffffff !important;
+  border-color: rgba(0, 162, 255, 0.5) !important;
+  box-shadow: 0 0 10px rgba(0, 140, 255, 0.3);
+}
+
+/* 产品列表样式 */
+.products-section {
+  padding: 50px 0;
+}
+
+.products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
   gap: 24px;
 }
 
-.trend-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 24px;
+.product-card {
+  display: flex;
+  padding: 28px;
+  border-radius: 12px;
+  background-color: rgba(15, 18, 36, 0.6);
+  border: 1px solid rgba(64, 153, 255, 0.15);
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(64, 153, 255, 0.05) 0%, rgba(114, 0, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2), 0 0 15px rgba(64, 153, 255, 0.15);
+  border-color: rgba(64, 153, 255, 0.3);
+}
+
+.product-card:hover:before {
+  opacity: 1;
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  margin-right: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.3s ease;
 }
 
-.trend-card:hover {
-  transform: translateY(-5px);
+.product-card:hover .product-image img {
+  transform: scale(1.05);
 }
 
-.trend-card h4 {
+.product-info {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.product-name {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  background: linear-gradient(90deg, #e0e0ff, #b5b8ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.product-rank {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(224, 224, 255, 0.7);
+  background: rgba(64, 153, 255, 0.2);
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.product-description {
+  color: rgba(224, 224, 255, 0.8);
+  margin-bottom: 15px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.product-tag {
+  background-color: rgba(114, 0, 255, 0.1) !important;
+  border-color: rgba(114, 0, 255, 0.2) !important;
+  color: rgba(224, 224, 255, 0.9) !important;
+  font-size: 12px !important;
+  transition: all 0.3s ease;
+}
+
+.product-tag:hover {
+  background-color: rgba(114, 0, 255, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+.product-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-width: 120px;
+  position: relative;
+  z-index: 1;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.rating-star {
+  color: #ffcb45;
   font-size: 18px;
-  color: #0a2540;
-  margin-bottom: 12px;
+  margin-right: 5px;
+  text-shadow: 0 0 5px rgba(255, 203, 69, 0.5);
 }
 
-.trend-card p {
-  color: #4a5568;
+.rating-value {
+  color: #fff;
+  font-weight: 600;
+}
+
+.upvote-btn {
+  background-color: rgba(64, 153, 255, 0.1) !important;
+  border-color: rgba(64, 153, 255, 0.3) !important;
+  color: #4099ff !important;
+  font-size: 16px !important;
+  padding: 12px 30px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.upvote-btn:hover {
+  background-color: #4099ff !important;
+  color: white !important;
+  box-shadow: 0 0 15px rgba(64, 153, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.product-comments {
+  font-size: 14px;
+  color: rgba(224, 224, 255, 0.7);
+  margin-top: 10px;
+}
+
+.load-more {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.load-more .el-button {
+  background-color: rgba(64, 153, 255, 0.1) !important;
+  border-color: rgba(64, 153, 255, 0.3) !important;
+  color: #4099ff !important;
+  font-size: 16px !important;
+  padding: 12px 30px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.load-more .el-button:hover {
+  background-color: rgba(64, 153, 255, 0.2) !important;
+  border-color: rgba(64, 153, 255, 0.4) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
-}
-
-/* 添加鼠标悬停效果 */
-.product-card {
-  cursor: pointer;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  transition: transform 0.3s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-}
-
-.product-card h4 {
-  font-size: 18px;
-  color: #0a2540;
-  margin-bottom: 12px;
-}
-
-.product-card p {
-  color: #4a5568;
 }
 </style>

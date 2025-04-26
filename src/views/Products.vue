@@ -26,7 +26,7 @@
         <div class="container">
           <div class="product-header-content">
             <div class="product-image">
-              <img :src="product.image || 'https://via.placeholder.com/120'" :alt="product.name">
+              <img :src="product.image || 'https://ph-files.imgix.net/ada2695b-e20b-4c1b-b04a-e0fbd9daf466.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=64&h=64&fit=crop&frame=1&dpr=1'" :alt="product.name">
             </div>
             <div class="product-header-info">
               <h1 class="product-title">{{ product.name }}</h1>
@@ -163,7 +163,7 @@
                 <div class="similar-products">
                   <div v-for="(item, index) in similarProducts" :key="index" class="similar-product-item">
                     <div class="similar-product-image">
-                      <img :src="item.image || 'https://via.placeholder.com/50'" :alt="item.name">
+                      <img :src="item.image" :alt="item.name">
                     </div>
                     <div class="similar-product-info">
                       <div class="similar-product-name">{{ item.name }}</div>
@@ -218,7 +218,7 @@
     id: 'cursor',
     name: 'Cursor',
     tagline: '基于AI的代码编辑器，帮助开发者更快地编写和理解代码',
-    image: 'https://ph-files.imgix.net/a3a6b51c-d233-4d5d-a64d-9e1b6b96d17c.png?auto=format',
+    image: 'https://ph-files.imgix.net/ada2695b-e20b-4c1b-b04a-e0fbd9daf466.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=64&h=64&fit=crop&frame=1&dpr=1',
     description: `<p>Cursor是一款革命性的代码编辑器，它集成了强大的AI功能，帮助开发者更快地编写、理解和调试代码。</p>
     <p>Cursor基于OpenAI的GPT-4模型，能够理解代码上下文，提供智能代码补全、代码解释和重构建议。它不仅可以帮助您编写新代码，还可以帮助您理解和修改现有代码库。</p>
     <p>无论您是经验丰富的开发者还是初学者，Cursor都能显著提高您的编码效率和代码质量。</p>`,
@@ -250,28 +250,28 @@
       }
     ],
     screenshots: [
-      'https://ph-files.imgix.net/d5b76304-7d9a-4d9c-b449-ef9e8c0ff1a2.png?auto=format',
-      'https://ph-files.imgix.net/b8f8c83d-c842-4a8c-a73f-a5a8d2e9b7c1.png?auto=format',
-      'https://ph-files.imgix.net/e6c0a4d8-9f9c-4972-8a59-c7f76b7e3a3c.png?auto=format'
+      'https://ph-files.imgix.net/0b40ec79-541f-4676-a1cd-42ea8959cde9.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=400&h=220&fit=max&frame=1&dpr=1',
+      'https://ph-files.imgix.net/64964b85-6408-4543-9276-2c447e484df4.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=363&h=220&fit=max&frame=1&dpr=1',
+      'https://ph-files.imgix.net/d790b507-ead3-4c97-8773-0a2f29420b23.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=363&h=220&fit=max&frame=1&dpr=1'
     ],
     comments: [
       {
         user: '张三',
-        avatar: 'https://via.placeholder.com/40',
+        avatar: 'https://ph-avatars.imgix.net/677204/4bd64add-426a-417a-b89f-436c8f78e1bb.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&frame=1&dpr=1',
         date: '2023-05-20',
         text: '这是我用过的最好的AI编程工具，大大提高了我的开发效率！',
         likes: 24
       },
       {
         user: '李四',
-        avatar: 'https://via.placeholder.com/40',
+        avatar: 'https://ph-avatars.imgix.net/7577871/original.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&frame=1&dpr=1',
         date: '2023-05-18',
         text: '代码解释功能非常实用，帮助我快速理解了一个复杂的开源项目。',
         likes: 18
       },
       {
         user: '王五',
-        avatar: 'https://via.placeholder.com/40',
+        avatar: 'https://ph-avatars.imgix.net/8282445/2656dc69-2fa9-4d58-83d5-f31a8079f256.jpeg?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=120&h=120&fit=crop&frame=1&dpr=1',
         date: '2023-05-15',
         text: '免费版已经很强大了，但是付费版的功能更加丰富，值得升级。',
         likes: 12
@@ -309,19 +309,19 @@
       id: 'github-copilot',
       name: 'GitHub Copilot',
       tagline: 'AI编程助手，可以根据注释和上下文生成代码',
-      image: 'https://ph-files.imgix.net/b7c1e0e7-bda6-4d7d-9348-82a23cc4e3fd.png?auto=format'
+      image: 'https://github.githubassets.com/images/modules/site/copilot/copilot.png'
     },
     {
       id: 'codeium',
       name: 'Codeium',
       tagline: '免费的AI编程助手，提供代码补全和生成功能',
-      image: 'https://ph-files.imgix.net/e6af34e1-a038-4978-b1f6-3d68e162ed74.png?auto=format'
+      image: 'https://codeium.com/favicon.png'
     },
     {
       id: 'tabnine',
       name: 'Tabnine',
       tagline: 'AI代码助手，支持多种编程语言和IDE',
-      image: 'https://ph-files.imgix.net/2e7e2f78-f57c-4f76-b3e3-e3a8d2dc0e39.png?auto=format'
+      image: 'https://www.tabnine.com/icons/icon-192x192.png'
     }
   ]);
   
@@ -364,6 +364,12 @@
   </script>
   
   <style scoped>
+  .product-detail {
+    background-color: #0a0a16;
+    color: #e0e0ff;
+    min-height: 100vh;
+  }
+  
   .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -372,12 +378,14 @@
   
   /* 顶部导航 */
   .top-nav {
-    border-bottom: 1px solid #eaeaea;
-    padding: 15px 0;
-    background-color: #fff;
+    border-bottom: 1px solid rgba(64, 153, 255, 0.2);
+    padding: 18px 0;
+    background-color: rgba(14, 14, 30, 0.7);
+    backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 25px rgba(0, 140, 255, 0.15);
   }
   
   .nav-content {
@@ -386,35 +394,78 @@
     align-items: center;
   }
   
+  .back-link .el-button {
+    color: #e0e0ff;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  
+  .back-link .el-button:hover {
+    color: #4099ff;
+    transform: translateX(-3px);
+  }
+  
   .nav-actions {
     display: flex;
     gap: 15px;
   }
   
   .action-btn {
-    color: #4a5568;
+    color: #a0aace;
+    transition: all 0.3s ease;
+  }
+  
+  .action-btn:hover {
+    color: #e0e0ff;
+    transform: translateY(-2px);
   }
   
   /* 产品头部 */
   .product-header {
-    padding: 40px 0;
-    background-color: #f5f8fa;
-    border-bottom: 1px solid #eaeaea;
+    padding: 60px 0;
+    background: linear-gradient(135deg, rgba(5, 12, 32, 0.9) 0%, rgba(15, 22, 52, 0.9) 100%);
+    border-bottom: 1px solid rgba(64, 153, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .product-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(0, 106, 255, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(94, 0, 255, 0.15) 0%, transparent 40%);
+    z-index: 1;
   }
   
   .product-header-content {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: 30px;
+    gap: 40px;
     align-items: center;
+    position: relative;
+    z-index: 2;
   }
   
   .product-image {
     width: 120px;
     height: 120px;
-    border-radius: 12px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 15px rgba(64, 153, 255, 0.3);
+    position: relative;
+  }
+  
+  .product-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 10px rgba(64, 153, 255, 0.2);
+    border-radius: 16px;
   }
   
   .product-image img {
@@ -424,126 +475,232 @@
   }
   
   .product-title {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: 700;
-    color: #0a2540;
-    margin: 0 0 8px 0;
+    color: #fff;
+    margin: 0 0 12px 0;
+    background: linear-gradient(90deg, #e0e0ff, #b5b8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
   }
   
   .product-tagline {
-    font-size: 18px;
-    color: #4a5568;
-    margin: 0 0 16px 0;
+    font-size: 20px;
+    color: rgba(224, 224, 255, 0.9);
+    margin: 0 0 20px 0;
+    line-height: 1.5;
   }
   
   .product-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 25px;
   }
   
   .product-tag {
-    font-size: 12px;
+    background-color: rgba(114, 0, 255, 0.1) !important;
+    border-color: rgba(114, 0, 255, 0.2) !important;
+    color: rgba(224, 224, 255, 0.9) !important;
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease;
+  }
+  
+  .product-tag:hover {
+    background-color: rgba(114, 0, 255, 0.2) !important;
+    transform: translateY(-2px);
   }
   
   .product-actions {
     display: flex;
-    gap: 12px;
+    gap: 15px;
   }
   
   .visit-btn {
-    background-color: #ff6154;
-    border-color: #ff6154;
+    background: linear-gradient(135deg, #4099ff, #704eff) !important;
+    border: none !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 5px 15px rgba(64, 153, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .visit-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(64, 153, 255, 0.4);
   }
   
   .upvote-btn {
+    background-color: rgba(64, 153, 255, 0.1) !important;
+    border-color: rgba(64, 153, 255, 0.3) !important;
+    color: #4099ff !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    padding: 12px 20px !important;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+  }
+  
+  .upvote-btn:hover {
+    background-color: #4099ff !important;
+    color: white !important;
+    box-shadow: 0 0 15px rgba(64, 153, 255, 0.4);
+    transform: translateY(-2px);
   }
   
   .product-meta {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
   }
   
   .meta-item {
     text-align: right;
+    background-color: rgba(64, 153, 255, 0.08);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(64, 153, 255, 0.15);
+    transition: all 0.3s ease;
+  }
+  
+  .meta-item:hover {
+    background-color: rgba(64, 153, 255, 0.12);
+    transform: translateY(-2px);
   }
   
   .meta-label {
     font-size: 12px;
-    color: #718096;
-    margin-bottom: 4px;
+    color: rgba(224, 224, 255, 0.6);
+    margin-bottom: 6px;
   }
   
   .meta-value {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
-    color: #2d3748;
+    color: #e0e0ff;
   }
   
   /* 产品内容区域 */
   .product-content {
-    padding: 40px 0;
+    padding: 60px 0;
+    position: relative;
+  }
+  
+  .product-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 10% 10%, rgba(0, 106, 255, 0.03) 0%, transparent 60%),
+                      radial-gradient(circle at 90% 90%, rgba(94, 0, 255, 0.03) 0%, transparent 60%);
+    z-index: 0;
   }
   
   .content-layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 40px;
+    position: relative;
+    z-index: 1;
   }
   
   .content-section {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
+    background-color: rgba(15, 18, 36, 0.4);
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .content-section:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 15px rgba(64, 153, 255, 0.1);
+    transform: translateY(-3px);
+    border-color: rgba(64, 153, 255, 0.2);
   }
   
   .section-title {
     font-size: 24px;
     font-weight: 600;
-    color: #0a2540;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eaeaea;
+    color: #fff;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(64, 153, 255, 0.15);
+    background: linear-gradient(90deg, #e0e0ff, #b5b8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
   .product-description {
     font-size: 16px;
-    line-height: 1.6;
-    color: #4a5568;
+    line-height: 1.7;
+    color: rgba(224, 224, 255, 0.9);
+  }
+  
+  .product-description p {
+    margin-bottom: 15px;
   }
   
   /* 产品特点 */
   .features-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px;
   }
   
   .feature-item {
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background-color: rgba(64, 153, 255, 0.05);
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .feature-item:hover {
+    background-color: rgba(64, 153, 255, 0.08);
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
   
   .feature-icon {
-    color: #10b981;
+    color: #00e676;
     font-size: 20px;
     margin-top: 3px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(0, 230, 118, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
   
   .feature-title {
     font-size: 18px;
     font-weight: 600;
-    color: #2d3748;
+    color: #e0e0ff;
     margin: 0 0 8px 0;
   }
   
   .feature-description {
-    font-size: 14px;
-    color: #4a5568;
+    font-size: 15px;
+    color: rgba(224, 224, 255, 0.8);
     margin: 0;
+    line-height: 1.6;
   }
   
   /* 产品截图 */
@@ -555,29 +712,42 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   }
   
   /* 用户评论 */
   .comments-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: 25px;
+    margin-bottom: 40px;
   }
   
   .comment-item {
     display: flex;
-    gap: 15px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eaeaea;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: rgba(64, 153, 255, 0.05);
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .comment-item:hover {
+    background-color: rgba(64, 153, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
   
   .comment-avatar {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(64, 153, 255, 0.3);
+    flex-shrink: 0;
   }
   
   .comment-avatar img {
@@ -593,24 +763,25 @@
   .comment-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
   
   .comment-user {
     font-weight: 600;
-    color: #2d3748;
+    color: #e0e0ff;
+    font-size: 16px;
   }
   
   .comment-date {
-    font-size: 12px;
-    color: #718096;
+    font-size: 14px;
+    color: rgba(224, 224, 255, 0.6);
   }
   
   .comment-text {
-    font-size: 14px;
-    line-height: 1.5;
-    color: #4a5568;
-    margin-bottom: 12px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(224, 224, 255, 0.9);
+    margin-bottom: 15px;
   }
   
   .comment-actions {
@@ -618,58 +789,104 @@
     gap: 15px;
   }
   
+  .comment-actions .el-button {
+    color: rgba(224, 224, 255, 0.7);
+    transition: all 0.3s ease;
+  }
+  
+  .comment-actions .el-button:hover {
+    color: #4099ff;
+    transform: translateY(-2px);
+  }
+  
   .add-comment {
     margin-top: 30px;
   }
   
   .comment-form-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 15px;
+    color: #e0e0ff;
+    margin-bottom: 20px;
   }
   
   .comment-form-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 15px;
+    margin-top: 20px;
+  }
+  
+  .comment-form-actions .el-button {
+    background: linear-gradient(135deg, #4099ff, #704eff) !important;
+    border: none !important;
+    padding: 10px 25px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 5px 15px rgba(64, 153, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .comment-form-actions .el-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(64, 153, 255, 0.4);
   }
   
   /* 侧边栏 */
   .sidebar-section {
-    background-color: #f8fafc;
-    border-radius: 8px;
-    padding: 20px;
+    background-color: rgba(15, 18, 36, 0.4);
+    border-radius: 16px;
+    padding: 25px;
     margin-bottom: 30px;
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-section:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), 0 0 15px rgba(64, 153, 255, 0.1);
+    transform: translateY(-3px);
+    border-color: rgba(64, 153, 255, 0.2);
   }
   
   .sidebar-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 600;
-    color: #2d3748;
-    margin: 0 0 15px 0;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eaeaea;
+    color: #fff;
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(64, 153, 255, 0.15);
+    background: linear-gradient(90deg, #e0e0ff, #b5b8ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
   /* 相关链接 */
   .links-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
   }
   
   .product-link {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #3182ce;
+    gap: 10px;
+    color: rgba(224, 224, 255, 0.8);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background-color: rgba(64, 153, 255, 0.05);
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    transition: all 0.3s ease;
   }
   
   .product-link:hover {
-    text-decoration: underline;
+    background-color: rgba(64, 153, 255, 0.1);
+    color: #fff;
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   }
   
   /* 相似产品 */
@@ -681,21 +898,28 @@
   
   .similar-product-item {
     display: flex;
-    gap: 12px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eaeaea;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: rgba(64, 153, 255, 0.05);
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
   }
   
-  .similar-product-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+  .similar-product-item:hover {
+    background-color: rgba(64, 153, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
   
   .similar-product-image {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
   }
   
   .similar-product-image img {
@@ -706,17 +930,22 @@
   
   .similar-product-info {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   
   .similar-product-name {
     font-weight: 600;
-    color: #2d3748;
-    margin-bottom: 4px;
+    color: #e0e0ff;
+    margin-bottom: 5px;
+    font-size: 16px;
   }
   
   .similar-product-tagline {
-    font-size: 12px;
-    color: #718096;
+    font-size: 14px;
+    color: rgba(224, 224, 255, 0.7);
+    line-height: 1.4;
   }
   
   /* 产品统计 */
@@ -726,20 +955,35 @@
     gap: 15px;
   }
   
-  .stat-item {
+  .stats-list .stat-item {
     text-align: center;
+    background-color: rgba(64, 153, 255, 0.05);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(64, 153, 255, 0.1);
+    transition: all 0.3s ease;
   }
   
-  .stat-label {
-    font-size: 12px;
-    color: #718096;
-    margin-bottom: 4px;
+  .stats-list .stat-item:hover {
+    background-color: rgba(64, 153, 255, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   }
   
-  .stat-value {
-    font-size: 18px;
+  .stats-list .stat-label {
+    font-size: 14px;
+    color: rgba(224, 224, 255, 0.6);
+    margin-bottom: 8px;
+  }
+  
+  .stats-list .stat-value {
+    font-size: 22px;
     font-weight: 700;
-    color: #2d3748;
+    color: #4099ff;
+    background: linear-gradient(90deg, #4099ff, #704eff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
   /* 响应式设计 */
