@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 导航栏 -->
     <header class="navbar">
-      <div class="container">
+      <div class="container navbar-container">
         <div class="logo">
           <h1>AI-CFD</h1>
         </div>
@@ -53,10 +53,6 @@
           <router-link to="/category/voice" class="nav-link">语音AI</router-link>
           <router-link to="/main/data-visualization" class="nav-link nav-link-highlight">财务分析</router-link>
         </nav>
-        <div class="auth-buttons">
-          <button class="btn btn-login">登录</button>
-          <button class="btn btn-signup">注册</button>
-        </div>
       </div>
     </header>
 
@@ -205,10 +201,16 @@ const navigateToProduct = (productId) => {
   border-bottom: 1px solid rgba(64, 153, 255, 0.2);
 }
 
-.navbar .container {
+.navbar-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.logo {
+  position: absolute;
+  left: 15px;
 }
 
 .logo h1 {
@@ -355,47 +357,6 @@ const navigateToProduct = (productId) => {
   color: #fff;
   background-color: rgba(64, 153, 255, 0.1);
   transform: translateX(3px);
-}
-
-/* 按钮样式 */
-.auth-buttons {
-  display: flex;
-  gap: 12px;
-}
-
-.btn {
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  border: none;
-  transition: all 0.3s ease;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-}
-
-.btn-login {
-  background-color: transparent;
-  color: #e0e6ff;
-  border: 1px solid rgba(64, 153, 255, 0.4);
-}
-
-.btn-login:hover {
-  background-color: rgba(64, 153, 255, 0.1);
-  border-color: rgba(64, 153, 255, 0.6);
-  transform: translateY(-2px);
-}
-
-.btn-signup {
-  background: linear-gradient(135deg, #4099ff, #704eff);
-  color: white;
-  box-shadow: 0 4px 10px rgba(64, 153, 255, 0.3);
-}
-
-.btn-signup:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(64, 153, 255, 0.4);
-  background: linear-gradient(135deg, #4099ff, #8043ff);
 }
 
 .main-content {

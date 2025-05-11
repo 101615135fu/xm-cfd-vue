@@ -1,26 +1,29 @@
 <template>
   <div class="chart-container">
-    <div ref="chartRef" class="echarts-container"></div>
-    <div v-if="loading" class="loading-overlay">
-      <el-icon class="loading-icon"><Loading /></el-icon>
+    <div class="chart-header" v-if="title">
+      <h3 class="chart-title">{{ title }}</h3>
+    </div>
+    <div class="chart-content" :style="{ height: height || '300px' }">
+      <div ref="chartRef" class="echarts-container"></div>
+      <div class="loading-overlay" v-if="loading">
+        <div class="loading-spinner"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
-import * as echarts from 'echarts'
-import { Loading } from '@element-plus/icons-vue'
+import { ref, onMounted, watch, onUnmounted, nextTick } from 'vue';
+import * as echarts from 'echarts';
 
 const props = defineProps({
   chartData: {
     type: Object,
-    required: true,
-    default: () => ({ xAxis: [], series: [] })
+    required: true
   },
   title: {
     type: String,
-    default: '数据趋势'
+    default: ''
   },
   loading: {
     type: Boolean,
@@ -28,90 +31,138 @@ const props = defineProps({
   },
   height: {
     type: String,
-    default: '400px'
+    default: '300px'
+  },
+  chartOptions: { // 添加自定义选项
+    type: Object,
+    default: () => ({})
   }
-})
+});
 
-const chartRef = ref(null)
-let chart = null
+const chartRef = ref(null);
+let chart = null;
 
+// 修改初始化图表和窗口大小变化处理函数
 const initChart = () => {
   if (chartRef.value) {
-    chart = echarts.init(chartRef.value)
-    setOptions()
-    
-    // 响应式处理
-    window.addEventListener('resize', chart.resize)
+    // 使用nextTick确保DOM已经渲染完成
+    nextTick(() => {
+      chart = echarts.init(chartRef.value);
+      updateChart();
+      
+      // 添加窗口大小变化监听
+      window.addEventListener('resize', handleResize);
+    });
   }
-}
+};
 
-const setOptions = () => {
-  const option = {
-    title: {
-      text: props.title,
-      textStyle: {
-        color: '#333',
-        fontSize: 16
-      },
-      left: 'center'
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      },
-      confine: true
-    },
+// 处理窗口大小变化
+const handleResize = () => {
+  if (chart) {
+    // 使用nextTick避免在主进程中调用resize
+    nextTick(() => {
+      chart.resize();
+    });
+  }
+};
+
+// 更新图表
+const updateChart = () => {
+  if (!chart) return;
+  
+  const { xAxis, series } = props.chartData;
+  
+  if (!xAxis || !series || series.length === 0) {
+    chart.showLoading({
+      text: '暂无数据',
+      maskColor: 'rgba(255, 255, 255, 0.1)',
+      textColor: '#e0e0ff'
+    });
+    return;
+  }
+  
+  chart.hideLoading();
+  
+  // 合并默认选项和自定义选项
+  const options = {
     grid: {
       left: '3%',
       right: '4%',
       bottom: '3%',
       containLabel: true
     },
+    tooltip: {
+      trigger: 'axis'
+    },
     xAxis: {
       type: 'category',
-      data: props.chartData.xAxis || [],
-      axisLabel: {
-        rotate: 45,
-        interval: 0
-      }
+      data: xAxis,
+      boundaryGap: false
     },
     yAxis: {
       type: 'value'
     },
-    series: props.chartData.series || [],
-    color: ['#1e88e5', '#4caf50', '#ff9800', '#f44336']
-  }
+    series: series,
+    ...props.chartOptions // 合并自定义选项
+  };
   
-  chart && chart.setOption(option)
-}
+  chart.setOption(options, true);
+};
 
-// 监听数据变化自动更新图表
-watch(() => props.chartData, () => {
-  setOptions()
-}, { deep: true })
+// 监听数据变化
+watch(() => props.chartData, updateChart, { deep: true });
+watch(() => props.chartOptions, updateChart, { deep: true });
+
+// 监听加载状态
+watch(() => props.loading, (newVal) => {
+  if (chart) {
+    if (newVal) {
+      chart.showLoading({
+        text: '加载中...',
+        maskColor: 'rgba(255, 255, 255, 0.1)',
+        textColor: '#e0e0ff'
+      });
+    } else {
+      chart.hideLoading();
+    }
+  }
+});
 
 onMounted(() => {
-  initChart()
-})
+  initChart();
+});
 
 onUnmounted(() => {
   if (chart) {
-    window.removeEventListener('resize', chart.resize)
-    chart.dispose()
-    chart = null
+    chart.dispose();
+    chart = null;
   }
-})
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
 <style scoped>
 .chart-container {
-  position: relative;
   width: 100%;
-  height: v-bind('props.height');
-  background-color: #fff;
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-sm);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-header {
+  margin-bottom: 10px;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e0e0ff;
+  margin: 0;
+}
+
+.chart-content {
+  position: relative;
+  flex: 1;
 }
 
 .echarts-container {
@@ -123,23 +174,24 @@ onUnmounted(() => {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(10, 10, 22, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: var(--border-radius-md);
 }
 
-.loading-icon {
-  font-size: 32px;
-  color: var(--primary-color);
-  animation: spin 1.5s linear infinite;
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 162, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #00a2ff;
+  animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
-</style> 
+</style>

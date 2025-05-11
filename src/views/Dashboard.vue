@@ -9,7 +9,7 @@
         <div class="search-box">
           <input type="text" placeholder="搜索AI工具..." v-model="searchQuery" />
           <button class="search-btn">
-            <i class="el-icon-search"></i>
+            <el-icon><Search /></el-icon>
           </button>
         </div>
         <div class="hero-stats">
@@ -130,7 +130,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { financialApi } from '../utils/api';
+import { financialApi } from '@/utils/request';
+// 引入Element Plus图标
+import { Search } from '@element-plus/icons-vue';
 
 const router = useRouter();
 
@@ -472,6 +474,13 @@ const navigateToProduct = (productId) => {
   font-weight: 500;
   font-size: 20px;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn .el-icon {
+  font-size: 20px;
 }
 
 .search-btn:hover {
