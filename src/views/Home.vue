@@ -4,14 +4,14 @@
     <header class="navbar">
       <div class="container navbar-container">
         <div class="logo">
-          <h1>AI-CFD</h1>
+          <h1>项目主意孵化器</h1>
         </div>
         <nav class="nav-links">
           <router-link to="/main/dashboard" class="nav-link">首页</router-link>
           
           <!-- 发现导航项带下拉菜单 -->
           <div class="dropdown-container">
-            <router-link to="/main/dashboard" class="nav-link">发现</router-link>
+            <router-link to="/main/industryVisualization" class="nav-link">发现</router-link>
             <div class="dropdown-menu">
               <div class="dropdown-content">
                 <!-- 左侧分类菜单 -->
@@ -49,8 +49,7 @@
             </div>
           </div>
           
-          <router-link to="/category/llm" class="nav-link">大语言模型</router-link>
-          <router-link to="/category/voice" class="nav-link">语音AI</router-link>
+          <router-link to="/category/llm" class="nav-link">AI咨询顾问</router-link>
           <router-link to="/main/data-visualization" class="nav-link nav-link-highlight">财务分析</router-link>
         </nav>
       </div>

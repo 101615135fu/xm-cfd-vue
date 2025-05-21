@@ -41,14 +41,29 @@
     </div>
     
     <el-row :gutter="20">
-      <!-- 饼图：按类别汇总 -->
+      <!-- 饼图：按类别汇总 - 修改为使用年度财务数据 -->
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
         <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">财务数据类别分布</h3>
+            <div class="chart-controls">
+              <span class="control-label">选择年份:</span>
+              <el-select v-model="selectedYear" placeholder="选择年份" size="small" @change="updateSummaryChart" style="min-width: 120px;">
+                <el-option 
+                  v-for="year in availableYears" 
+                  :key="year" 
+                  :label="year" 
+                  :value="year" 
+                />
+              </el-select>
+            </div>
+          </div>
           <pie-chart
             :chart-data="summaryChartData"
-            title="财务数据类别分布"
             :loading="loading.summary"
             height="350px"
+            title=""
+            :show-title="false"
           />
         </div>
       </el-col>
@@ -221,7 +236,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed, nextTick } from 'vue'
+import { ref, reactive, onMounted, computed, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import LineChart from '../components/charts/LineChart.vue'
 import BarChart from '../components/charts/BarChart.vue'
@@ -229,6 +244,7 @@ import PieChart from '../components/charts/PieChart.vue'
 import { financialApi } from '@/utils/request'
 import { getStockHistory, formatTimeSeriesData } from '@/services/financialDataService'
 import { getIncomeStatement, getBalanceSheet, getCashFlowStatement, getFinancialRatios } from '@/services/fmpService'
+import '@/styles/dataVisualization.css'
 
 // 筛选表单
 const filterForm = reactive({
@@ -249,13 +265,17 @@ const companyOptions = [
   { value: 'JPM', label: 'JPMorgan Chase & Co. (摩根大通)' }
 ]
 
+// 添加缺失的变量定义
+const selectedYear = ref('') // 选择的年份
+const availableYears = ref([]) // 可用年份列表
+const financialDataByYear = ref({}) // 按年份存储的财务数据
+
 // 处理公司变更
 const handleCompanyChange = () => {
+  // 重置年份选择
+  selectedYear.value = ''
   // 当公司变更时，重新获取财务数据
-  fetchSummaryData()
-  fetchMonthlyData()
-  fetchTrendData()
-  fetchTableData()
+  fetchAllData()
 }
 
 // 分类选项
@@ -331,11 +351,11 @@ const generateData = async () => {
 
 // 获取所有图表数据
 const fetchAllData = () => {
-  fetchSummaryData()
-  fetchMonthlyData()
+  // 不再单独获取饼图数据，由fetchMonthlyData提供
+  fetchMonthlyData() // 这个函数现在同时处理柱状图和饼图数据
   fetchTrendData()
   fetchTableData()
-  fetchStockData() // 添加股票数据获取
+  fetchStockData()
 }
 
 // 构建查询参数
@@ -354,52 +374,24 @@ const buildQueryParams = () => {
   return params
 }
 
-// 获取汇总数据（饼图）
-const fetchSummaryData = async () => {
-  loading.summary = true
-  try {
-    // 使用选择的公司
-    const symbol = filterForm.company
-    
-    // 获取资产负债表数据
-    const params = buildQueryParams()
-    const data = await financialApi.getFinancialSummary(params)
-    
-    // 检查数据是否为空
-    if (!data || data.length === 0) {
-      // 使用模拟数据
-      summaryChartData.value = [
-        { name: '收入', value: 45000 },
-        { name: '支出', value: 28000 },
-        { name: '投资', value: 15000 },
-        { name: '储蓄', value: 12000 }
-      ]
-      console.info('使用饼图模拟数据')
-    } else {
-      summaryChartData.value = data.map(item => ({
-        name: item.category,
-        value: item.total
-      }))
-    }
-  } catch (error) {
-    console.error('获取汇总数据失败', error)
-    ElMessage.error('获取汇总数据失败')
-    
-    // 错误时也使用模拟数据
-    summaryChartData.value = [
-      { name: '收入', value: 45000 },
-      { name: '支出', value: 28000 },
-      { name: '投资', value: 15000 },
-      { name: '储蓄', value: 12000 }
-    ]
-  } finally {
-    loading.summary = false
+// 更新饼图数据的函数
+const updateSummaryChart = () => {
+  if (selectedYear.value && financialDataByYear.value[selectedYear.value]) {
+    summaryChartData.value = financialDataByYear.value[selectedYear.value]
+    console.log('更新饼图数据:', selectedYear.value, summaryChartData.value)
+  } else if (Object.keys(financialDataByYear.value).length > 0) {
+    // 如果没有选择年份，使用最新的年份
+    const latestYear = Object.keys(financialDataByYear.value).pop()
+    selectedYear.value = latestYear
+    summaryChartData.value = financialDataByYear.value[latestYear]
+    console.log('使用最新年份更新饼图:', latestYear, summaryChartData.value)
   }
 }
 
-// 获取月度数据（柱状图）
+// 获取月度数据（柱状图）- 同时处理饼图数据
 const fetchMonthlyData = async () => {
   loading.monthly = true
+  loading.summary = true // 同时设置饼图加载状态
   try {
     // 使用选择的公司
     const symbol = filterForm.company
@@ -414,6 +406,13 @@ const fetchMonthlyData = async () => {
         const date = new Date(statement.date)
         return date.getFullYear().toString()
       }).reverse() // 按时间顺序排列
+      
+      // 保存可用年份
+      availableYears.value = years
+      // 默认选择最新年份
+      if (!selectedYear.value && years.length > 0) {
+        selectedYear.value = years[years.length - 1]
+      }
       
       // 提取收入、成本和利润数据
       const revenue = incomeStatements.map(statement => statement.revenue / 1000000).reverse() // 转换为百万
@@ -444,6 +443,20 @@ const fetchMonthlyData = async () => {
         ]
       }
       
+      // 按年份整理财务数据，用于饼图
+      financialDataByYear.value = {}
+      years.forEach((year, index) => {
+        financialDataByYear.value[year] = [
+          { name: '营业收入', value: revenue[index] },
+          { name: '营业成本', value: costOfRevenue[index] },
+          { name: '毛利润', value: grossProfit[index] },
+          { name: '净利润', value: netIncome[index] }
+        ]
+      })
+      
+      // 更新饼图数据
+      updateSummaryChart()
+      
       console.info('使用FMP API获取的收入报表数据')
     } else {
       throw new Error('未获取到收入报表数据')
@@ -452,27 +465,56 @@ const fetchMonthlyData = async () => {
     console.error('获取月度数据失败', error)
     ElMessage.error('获取月度数据失败，使用模拟数据')
     
-    // 错误时使用模拟数据
-    const months = ['2025-01', '2025-02', '2025-03', '2025-04', '2025-05', '2025-06']
+    // 错误时使用模拟数据 - 修改为使用年份而非月份
+    const years = ['2020', '2021', '2022', '2023', '2024']
+    availableYears.value = years
+    if (!selectedYear.value) {
+      selectedYear.value = '2024'
+    }
+    
+    const mockRevenue = [8000, 9200, 9500, 10700, 12000]
+    const mockCost = [5000, 5500, 5700, 6000, 6500]
+    const mockGrossProfit = [3000, 3700, 3800, 4700, 5500]
+    const mockNetIncome = [2000, 2500, 2600, 3200, 3800]
+    
     monthlyChartData.value = {
-      xAxis: months,
+      xAxis: years,
       series: [
         {
-          name: '收入',
-          data: [8000, 9200, 9500, 8700, 10000, 11500]
+          name: '营业收入',
+          data: mockRevenue
         },
         {
-          name: '支出',
-          data: [5000, 5500, 5700, 6000, 5800, 6200]
+          name: '营业成本',
+          data: mockCost
         },
         {
-          name: '投资',
-          data: [3000, 2800, 3200, 3500, 3800, 4000]
+          name: '毛利润',
+          data: mockGrossProfit
+        },
+        {
+          name: '净利润',
+          data: mockNetIncome
         }
       ]
     }
+    
+    // 按年份整理模拟财务数据，用于饼图
+    financialDataByYear.value = {}
+    years.forEach((year, index) => {
+      financialDataByYear.value[year] = [
+        { name: '营业收入', value: mockRevenue[index] },
+        { name: '营业成本', value: mockCost[index] },
+        { name: '毛利润', value: mockGrossProfit[index] },
+        { name: '净利润', value: mockNetIncome[index] }
+      ]
+    })
+    
+    // 更新饼图数据
+    updateSummaryChart()
   } finally {
     loading.monthly = false
+    loading.summary = false
   }
 }
 
@@ -654,6 +696,7 @@ const fetchTableData = async () => {
 const stockData = ref([])
 const stockLoading = ref(false)
 const stockChartData = ref({ xAxis: [], series: [] })
+const stockIndicators = ref([]) // 添加股票指标数据
 
 // 获取股票数据 - 使用真实API
 const fetchStockData = async () => {
@@ -751,7 +794,6 @@ const prepareStockChartData = (stocks) => {
   const dayChanges = stocks.map(stock => {
     const changePercent = stock['change percent'];
     if (!changePercent) return 0;
-    // 移除百分号并转换为数字
     return parseFloat(changePercent.replace('%', '')) || 0;
   });
   
@@ -792,186 +834,3 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-@import '../assets/theme.css';
-
-.data-visualization {
-  padding: var(--spacing-lg);
-}
-
-.page-header {
-  margin-bottom: var(--spacing-lg);
-}
-
-.page-title {
-  color: var(--text-color);
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--spacing-md);
-}
-
-.filter-container {
-  background-color: var(--background-color);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: var(--spacing-lg);
-}
-
-.chart-card {
-  background-color: var(--background-color);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  box-shadow: var(--shadow-sm);
-  margin-bottom: var(--spacing-lg);
-  transition: all 0.3s ease;
-}
-
-.chart-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-.section-title {
-  font-size: var(--font-size-lg);
-  color: var(--text-color);
-  margin-bottom: var(--spacing-md);
-}
-
-.data-table-container {
-  background-color: var(--background-color);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md);
-  box-shadow: var(--shadow-sm);
-}
-
-.pagination-container {
-  margin-top: var(--spacing-md);
-  display: flex;
-  justify-content: flex-end;
-}
-
-.mt-20 {
-  margin-top: 20px;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .data-visualization {
-    padding: var(--spacing-md) var(--spacing-sm);
-  }
-  
-  .filter-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .filter-form .el-form-item {
-    margin-right: 0;
-    margin-bottom: var(--spacing-sm);
-  }
-}
-
-/* 添加股票数据相关样式 */
-.text-success {
-  color: #67C23A;
-  font-weight: bold;
-}
-
-.text-danger {
-  color: #F56C6C;
-  font-weight: bold;
-}
-
-.stock-tabs .el-tabs__content {
-  padding: 10px 0;
-}
-
-.stock-card {
-  margin-bottom: 20px;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s;
-}
-
-.stock-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.stock-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.stock-name {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.stock-price {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.stock-content {
-  padding: 15px;
-}
-
-.stock-indicator {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.stock-indicator-label {
-  color: #666;
-}
-
-.stock-indicator-value {
-  font-weight: bold;
-}
-
-/* 添加图表控制样式 */
-.chart-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-md);
-}
-
-.chart-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 300px;
-}
-
-.control-label {
-  font-size: 14px;
-  color: var(--text-color-secondary);
-  white-space: nowrap;
-}
-
-.year-display {
-  font-size: 14px;
-  color: var(--text-color);
-  font-weight: bold;
-  min-width: 40px;
-}
-
-/* 修改滑块样式 */
-:deep(.el-slider) {
-  margin: 0;
-}
-
-:deep(.el-slider__runway) {
-  margin: 0;
-}
-
-:deep(.company-select-dropdown) {
-  min-width: 280px !important;
-}
-</style>

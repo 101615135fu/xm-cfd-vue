@@ -1,0 +1,190 @@
+@import '../assets/theme.css';
+
+.data-visualization {
+  padding: var(--spacing-lg);
+}
+
+.page-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.page-title {
+  color: var(--text-color);
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-md);
+}
+
+.filter-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.chart-card {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg);
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-size: var(--font-size-lg);
+  color: var(--text-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.data-table-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.pagination-container {
+  margin-top: var(--spacing-md);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .data-visualization {
+    padding: var(--spacing-md) var(--spacing-sm);
+  }
+  
+  .filter-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .filter-form .el-form-item {
+    margin-right: 0;
+    margin-bottom: var(--spacing-sm);
+  }
+}
+
+/* 添加股票数据相关样式 */
+.text-success {
+  color: #67C23A;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: #F56C6C;
+  font-weight: bold;
+}
+
+.stock-tabs .el-tabs__content {
+  padding: 10px 0;
+}
+
+.stock-card {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.stock-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.stock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.stock-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.stock-price {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.stock-content {
+  padding: 15px;
+}
+
+.stock-indicator {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.stock-indicator-label {
+  color: #666;
+}
+
+.stock-indicator-value {
+  font-weight: bold;
+}
+
+/* 添加图表控制样式 */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+/* 添加饼图标题样式 */
+.chart-title {
+  color: #000000;
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+}
+
+/* 修改年份选择控件样式 */
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.control-label {
+  font-size: 14px;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+  color: #000000;
+}
+
+.year-display {
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: bold;
+  min-width: 40px;
+}
+
+/* 修改滑块样式 */
+.el-slider {
+  margin: 0;
+}
+
+.el-slider__runway {
+  margin: 0;
+}
+
+.company-select-dropdown {
+  min-width: 280px !important;
+}

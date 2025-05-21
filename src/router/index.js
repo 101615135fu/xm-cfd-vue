@@ -11,12 +11,14 @@ const router = createRouter({
         { path: 'dashboard', name: 'dashboard', component: () => import('../views/Dashboard.vue') },
         { path: 'data-visualization', name: 'data-visualization', component: () => import('../views/DataVisualization.vue') },
         {
-          path: '/product/:id', name: 'product-detail', component: () => import('../views/Products.vue'),props: true
+          path: 'product/:id', name: 'product-detail', component: () => import('../views/Products.vue'),props: true
         },
         {
-          path: '/category/:category?',name: 'category',component: () => import('../views/Category.vue'),props: true
+          path: 'category/:category?',name: 'category',component: () => import('../views/Category.vue'),props: true
         },
-        
+        {
+          path: 'industryVisualization',name: 'industryVisualization',component: () => import('../views/IndustryVisualization.vue'),props: true
+        },
       ]
     },
     

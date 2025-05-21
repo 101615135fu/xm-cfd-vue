@@ -4,8 +4,8 @@
     <div class="hero-section">
       <div class="hero-bg-overlay"></div>
       <div class="container">
-        <h2 class="hero-title">发现顶尖<span class="highlight">AI工具</span></h2>
-        <p class="hero-subtitle">探索2024年最受欢迎的AI应用、大语言模型和开发工具</p>
+        <h2 class="hero-title">创业<span class="highlight">平台</span></h2>
+        <p class="hero-subtitle">发现、孵化和加速您的创业想法，连接投资人和创业资源</p>
         <div class="search-box">
           <input type="text" placeholder="搜索AI工具..." v-model="searchQuery" />
           <button class="search-btn">
@@ -15,7 +15,7 @@
         <div class="hero-stats">
           <div class="stat-item">
             <span class="stat-value">4,500+</span>
-            <span class="stat-label">AI工具</span>
+            <span class="stat-label">初创公司</span>
           </div>
           <div class="stat-item">
             <span class="stat-value">120万+</span>

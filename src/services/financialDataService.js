@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { saveAs } from 'file-saver'; // 需要安装: npm install file-saver
 
 // 配置API密钥和基础URL
 const API_KEY = 'BR3MCQ268E2X7TR9'; // 需要替换为您的API密钥
@@ -143,6 +144,106 @@ export async function getMultipleStocks(symbols) {
     return await Promise.all(promises);
   } catch (error) {
     console.error('获取多个股票数据失败:', error);
+    throw error;
+  }
+}
+
+// 新增: 将股票数据保存为CSV文件
+export async function saveStockDataToCSV(symbols) {
+  try {
+    // 获取多个股票数据
+    const stocksData = await getMultipleStocks(symbols);
+    
+    // 创建CSV内容
+    let csvContent = "symbol,company,price,change,changePercent,open,high,low,volume,latestTradingDay,previousClose\n";
+    
+    stocksData.forEach(stock => {
+      if (stock['Global Quote']) {
+        const quote = stock['Global Quote'];
+        const companyName = getCompanyNameForCSV(quote['01. symbol']);
+        
+        csvContent += `${quote['01. symbol']},${companyName},${quote['05. price']},${quote['09. change']},` +
+                     `${quote['10. change percent']},${quote['02. open']},${quote['03. high']},` +
+                     `${quote['04. low']},${quote['06. volume']},${quote['07. latest trading day']},` +
+                     `${quote['08. previous close']}\n`;
+      }
+    });
+    
+    // 创建Blob对象
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    
+    // 保存文件
+    saveAs(blob, 'assets/stock_data.csv');
+    
+    return { success: true, message: '股票数据已保存为CSV文件' };
+  } catch (error) {
+    console.error('保存股票数据到CSV失败:', error);
+    throw error;
+  }
+}
+
+// 获取公司名称 (用于CSV)
+function getCompanyNameForCSV(symbol) {
+  const companyNames = {
+    'AAPL': 'Apple Inc.',
+    'MSFT': 'Microsoft Corporation',
+    'GOOGL': 'Alphabet Inc.',
+    'AMZN': 'Amazon.com Inc.',
+    'META': 'Meta Platforms Inc.',
+    'TSLA': 'Tesla Inc.',
+    'NVDA': 'NVIDIA Corporation',
+    'JPM': 'JPMorgan Chase & Co.',
+    'V': 'Visa Inc.',
+    'WMT': 'Walmart Inc.',
+    'JNJ': 'Johnson & Johnson',
+    'PG': 'Procter & Gamble Co.',
+    'BABA': 'Alibaba Group Holding Ltd.',
+    'TSM': 'Taiwan Semiconductor Manufacturing Co.',
+    'ORCL': 'Oracle Corporation'
+  };
+  
+  return companyNames[symbol] || symbol;
+}
+
+// 新增: 从CSV文件读取股票数据
+export async function readStockDataFromCSV() {
+  try {
+    const response = await fetch('/assets/stock_data.csv');
+    const csvText = await response.text();
+    
+    // 解析CSV
+    const lines = csvText.split('\n');
+    const headers = lines[0].split(',');
+    
+    const stocksData = [];
+    
+    // 从第二行开始解析数据行
+    for (let i = 1; i < lines.length; i++) {
+      if (!lines[i].trim()) continue; // 跳过空行
+      
+      const values = lines[i].split(',');
+      const stock = {};
+      
+      // 将CSV数据映射到与API返回格式相似的结构
+      stock.symbol = values[0];
+      stock.shortName = values[0];
+      stock.displayName = values[1];
+      stock.price = values[2];
+      stock.change = values[3];
+      stock['change percent'] = values[4];
+      stock.open = values[5];
+      stock.high = values[6];
+      stock.low = values[7];
+      stock.volume = values[8];
+      stock['latest trading day'] = values[9];
+      stock['previous close'] = values[10];
+      
+      stocksData.push(stock);
+    }
+    
+    return stocksData;
+  } catch (error) {
+    console.error('从CSV读取股票数据失败:', error);
     throw error;
   }
 }

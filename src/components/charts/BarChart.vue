@@ -29,6 +29,11 @@ const props = defineProps({
   height: {
     type: String,
     default: '400px'
+  },
+  // 添加横向柱状图控制属性
+  horizontal: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -46,6 +51,7 @@ const initChart = () => {
 }
 
 const setOptions = () => {
+  // 根据是否为横向柱状图调整配置
   const option = {
     title: {
       text: props.title,
@@ -62,16 +68,24 @@ const setOptions = () => {
       }
     },
     legend: {
-      data: props.chartData.series?.map(item => item.name) || [],
+      // 如果图表数据中指定了legend配置，优先使用
+      show: props.chartData.legend?.show !== undefined ? props.chartData.legend.show : true,
+      data: props.chartData.series?.map(item => item.name).filter(Boolean) || [],
       bottom: 0
     },
     grid: {
-      left: '3%',
+      left: props.horizontal ? '15%' : '3%', // 横向图表需要更多左侧空间显示标签
       right: '4%',
       bottom: '10%',
       containLabel: true
     },
-    xAxis: {
+    // 根据horizontal属性交换x轴和y轴的配置
+    xAxis: props.horizontal ? {
+      type: 'value',
+      name: props.chartData.xAxis?.name || '',
+      nameLocation: 'middle',
+      nameGap: 30
+    } : {
       type: 'category',
       data: props.chartData.xAxis || [],
       axisLabel: {
@@ -79,15 +93,24 @@ const setOptions = () => {
         rotate: 30
       }
     },
-    yAxis: {
-      type: 'value'
+    yAxis: props.horizontal ? {
+      type: 'category',
+      data: props.chartData.yAxis || props.chartData.xAxis || [], // 支持yAxis或fallback到xAxis
+      axisLabel: {
+        interval: 0
+      }
+    } : {
+      type: 'value',
+      name: props.chartData.yAxis?.name || ''
     },
     series: props.chartData.series?.map(item => ({
       ...item,
       type: 'bar',
-      barMaxWidth: 40,
+      barMaxWidth: props.horizontal ? 20 : 40, // 横向柱状图柱子宽度调小
       itemStyle: {
-        borderRadius: [4, 4, 0, 0]
+        borderRadius: props.horizontal ? 
+          [0, 4, 4, 0] : // 横向柱状图圆角在右侧
+          [4, 4, 0, 0]   // 垂直柱状图圆角在顶部
       }
     })) || [],
     color: ['#1e88e5', '#4caf50', '#ff9800', '#f44336']
@@ -100,6 +123,11 @@ const setOptions = () => {
 watch(() => props.chartData, () => {
   setOptions()
 }, { deep: true })
+
+// 监听horizontal属性变化
+watch(() => props.horizontal, () => {
+  setOptions()
+})
 
 onMounted(() => {
   initChart()
@@ -152,4 +180,4 @@ onUnmounted(() => {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-</style> 
+</style>
