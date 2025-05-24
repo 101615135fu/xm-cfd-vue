@@ -205,97 +205,107 @@ const loadExcelData = async () => {
   try {
     isLoading.value = true;
     
-    // 模拟从Product Hunt获取的数据
+    // 使用ProductHunt的数据
     const data = [
       {
-        name: "OpenAI",
-        description: "构建AI产品的强大平台，由行业领先的模型和工具提供支持",
-        image: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/openai-icon.svg",
-        tags: ["AI基础设施", "开发工具", "大语言模型"],
-        upvotes: 4324,
-        comments: 71,
-        rating: 4.6
-      },
-      {
-        name: "ChatGPT",
-        description: "获取答案，寻找灵感，提高生产力的AI助手",
-        image: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/openai.svg",
-        tags: ["聊天机器人", "大语言模型", "AI助手"],
-        upvotes: 3985,
-        comments: 759,
-        rating: 4.7
-      },
-      {
-        name: "Claude",
-        description: "一系列基础性AI模型，可靠、可解释、可控",
-        image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg",
-        tags: ["大语言模型", "AI助手", "聊天机器人"],
+        name: "Cursor",
+        description: "Built to make you extraordinarily productive, Cursor is the best way to code with AI.",
+        image: "https://ph-files.imgix.net/ada2695b-e20b-4c1b-b04a-e0fbd9daf466.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "代码编辑器", "开发工具"],
         upvotes: 3254,
-        comments: 100,
-        rating: 4.8
+        comments: 157,
+        rating: 4.8,
+        url: "https://www.producthunt.com/products/cursor"
       },
       {
-        name: "Anthropic",
-        description: "Anthropic AI研究公司旨在构建可靠、可解释和可控的AI系统",
-        image: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/claude-ai-icon.png",
-        tags: ["AI基础设施", "大语言模型", "AI研究"],
-        upvotes: 2854,
-        comments: 8,
-        rating: 4.5
+        name: "Lovable",
+        description: "The AI Fullstack Engineer that works. Ship lovable full-stack applications 20x faster than by writing code ❤",
+        image: "https://ph-files.imgix.net/c7e0f451-1ad5-4d26-b5fd-075ae3aa9db4.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=188&h=118&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "无代码平台", "全栈开发"],
+        upvotes: 2987,
+        comments: 245,
+        rating: 4.7,
+        url: "https://www.producthunt.com/products/lovable"
       },
       {
-        name: "ElevenLabs",
-        description: "即时创建任何语言的自然AI语音",
-        image: "https://upload.wikimedia.org/wikipedia/commons/e/e2/ElevenLabs_logo_%282022-2024%29.png",
-        tags: ["文本转语音", "AI声音", "创作工具"],
+        name: "Replit",
+        description: "Replit turns your ideas into apps, fast. With Replit's Agent and Assistant, create apps from natural language and launch in a single click.",
+        image: "https://ph-files.imgix.net/5f621a68-2838-4ad2-97a5-fd3fc6dad117.jpeg?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "代码编辑器", "应用开发"],
         upvotes: 2543,
-        comments: 49,
-        rating: 4.8
+        comments: 25,
+        rating: 3.9,
+        url: "https://www.producthunt.com/products/replit"
       },
       {
-        name: "Langchain",
-        description: "LangChain的产品套件支持AI开发",
-        image: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/langchain.svg",
-        tags: ["AI基础设施", "开发工具", "大语言模型"],
-        upvotes: 2345,
-        comments: 4,
-        rating: 5.0
+        name: "Windsurf",
+        description: "Windsurf is an IDE that enables anyone to collaborate in lockstep with AI. Built by the Codeium team.",
+        image: "https://ph-files.imgix.net/eeb9b2eb-49ed-4be5-8db0-4bd1a01d39e4.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "代码编辑器", "协作工具"],
+        upvotes: 2321,
+        comments: 43,
+        rating: 4.9,
+        url: "https://www.producthunt.com/products/windsurf"
       },
       {
-        name: "Gemini",
-        description: "Google对GPT-4的回应",
-        image: "https://ph-files.imgix.net/99b3e788-14c7-4bbb-97ea-d87c23c9318f.png?auto=format",
-        tags: ["大语言模型", "AI助手", "谷歌AI"],
-        upvotes: 2123,
-        comments: 40,
-        rating: 4.5
+        name: "Zed",
+        description: "Zed is a next-generation code editor designed for high-performance collaboration with humans and AI.",
+        image: "https://ph-files.imgix.net/5e384dcc-8e07-4d0a-93b6-720c0bb005b6.jpeg?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "代码编辑器", "协作工具"],
+        upvotes: 2156,
+        comments: 30,
+        rating: 4.9,
+        url: "https://www.producthunt.com/products/zed"
       },
       {
-        name: "Llama",
-        description: "Meta的开源LLM家族",
-        image: "https://unpkg.com/@lobehub/icons-static-svg@latest/icons/meta-llama.svg",
-        tags: ["大语言模型", "开源AI", "Meta AI"],
-        upvotes: 1976,
-        comments: 16,
-        rating: 4.8
+        name: "Github Copilot",
+        description: "GitHub Copilot works alongside you directly in your editor, suggesting whole lines or entire functions for you. Powered by OpenAI.",
+        image: "https://ph-files.imgix.net/9511fe6d-3bff-472b-ab02-f1c38d036235.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "代码助手", "开发工具"],
+        upvotes: 1987,
+        comments: 11,
+        rating: 4.8,
+        url: "https://www.producthunt.com/products/github-copilot"
       },
       {
-        name: "Intercom",
-        description: "AI优先的客户支持平台",
-        image: "https://ph-files.imgix.net/d5eb104d-b62a-4bbd-9d14-4586287d4a6c.png?auto=format",
-        tags: ["客户支持", "聊天机器人", "AI助手"],
-        upvotes: 1754,
-        comments: 567,
-        rating: 4.3
+        name: "Warp",
+        description: "Warp is the terminal with AI and your dev team's knowledge built-in.",
+        image: "https://ph-files.imgix.net/914cce51-89c3-4884-aa9f-9a7481721517.jpeg?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "终端工具", "开发工具"],
+        upvotes: 1876,
+        comments: 159,
+        rating: 4.8,
+        url: "https://www.producthunt.com/products/warp"
       },
       {
-        name: "Deepgram",
-        description: "为开发者设计的语音AI平台",
-        image: "https://ph-files.imgix.net/d8569aff-15af-4d9e-8095-08c1d1d3e0fa.png?auto=format",
-        tags: ["语音AI", "文本转语音", "AI语音代理"],
-        upvotes: 1650,
-        comments: 22,
-        rating: 4.4
+        name: "PyTorch",
+        description: "Machine learning library based on the Torch library",
+        image: "https://ph-files.imgix.net/37d77c0c-f875-49bc-a840-a347e9ee4a5f.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["AI编程", "机器学习", "AI基础设施"],
+        upvotes: 1654,
+        comments: 1,
+        rating: 5.0,
+        url: "https://www.producthunt.com/products/pytorch-2"
+      },
+      {
+        name: "JetBrains WebStorm",
+        description: "Make development more productive and enjoyable with WebStorm, the IDE for JavaScript and related technologies.",
+        image: "https://ph-files.imgix.net/76f1e56d-bff2-464f-9c6a-6ed35594cb90.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["代码编辑器", "开发工具", "JavaScript"],
+        upvotes: 1543,
+        comments: 2,
+        rating: 5.0,
+        url: "https://www.producthunt.com/products/webstorm"
+      },
+      {
+        name: "Cheat Layer",
+        description: "Cheat Layer builds entire automations for you from end-to-end in simple language, meeting all users at their level of understanding.",
+        image: "https://ph-files.imgix.net/37b0455d-2bbc-4be6-986f-585f2fe75689.png?auto=compress&codec=mozjpeg&cs=strip&auto=format&w=40&h=40&fit=crop&frame=1&dpr=1",
+        tags: ["无代码平台", "自动化工具", "AI助手"],
+        upvotes: 1432,
+        comments: 89,
+        rating: 4.8,
+        url: "https://www.producthunt.com/products/cheat-layer"
       }
     ];
     
@@ -309,7 +319,8 @@ const loadExcelData = async () => {
         tags: typeof item.tags === 'string' ? item.tags.split(',') : item.tags,
         upvotes: item.upvotes,
         comments: item.comments,
-        rating: item.rating
+        rating: item.rating,
+        url: item.url // 添加ProductHunt URL
       };
     });
     
@@ -327,7 +338,15 @@ onMounted(() => {
 
 // 添加导航到产品详情页的方法
 const navigateToProduct = (productId) => {
-  router.push({ name: 'product-detail', params: { id: productId } });
+  // 查找对应产品
+  const product = products.value.find(p => p.id === productId);
+  if (product && product.url) {
+    // 使用ProductHunt URL打开新窗口
+    window.open(product.url, '_blank');
+  } else {
+    // 如果没有URL，使用原来的路由导航
+    router.push({ name: 'product-detail', params: { id: productId } });
+  }
 };
 </script>
 

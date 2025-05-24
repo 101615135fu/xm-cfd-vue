@@ -1,29 +1,23 @@
-# xm-cfd
+项目已经使用命令打包好了（5.24 18：22）放在dist文件夹里面，包含所有编译后的静态文件
 
-This template should help get you started developing with Vue 3 in Vite.
+你可以自行通过以下命令再次打包
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+``` sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
 npm run build
 ```
+
+项目中基本包含Dockerfile，使用nginx作为Web服务器来托管静态文件。
+
+- 使用Docker构建镜像
+
+``` sh
+docker build -t xm-cfd:latest .
+```
+
+- 运行Docker容器 如果端口号被占用记得换一个端口号
+
+``` sh
+docker run -d -p 80:80 --name xm-cfd-container xm-cfd:latest
+```
+

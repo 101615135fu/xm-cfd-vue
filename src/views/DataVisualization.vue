@@ -135,7 +135,7 @@
           <h2 class="section-title">股票行情数据</h2>
           <bar-chart
             :chart-data="stockChartData"
-            title="主要股票价格对比"
+            title="主要股票价格与涨跌幅对比"
             :loading="stockLoading"
             height="450px"
           />
@@ -158,53 +158,31 @@
             stripe
           >
             <el-table-column prop="symbol" label="代码" width="80" fixed />
-            <el-table-column prop="shortName" label="名称" width="150" fixed>
-              <template #default="scope">
-                {{ scope.row.shortName || scope.row.displayName || scope.row.symbol }}
-              </template>
-            </el-table-column>
+            <el-table-column prop="name" label="名称" width="180" fixed />
             <el-table-column prop="price" label="当前价格" width="100">
               <template #default="scope">
-                {{ scope.row.price || scope.row.regularMarketPrice?.toFixed(2) || 'N/A' }}
+                {{ scope.row.price.toFixed(2) }} {{ scope.row.currency }}
               </template>
             </el-table-column>
             <el-table-column prop="change" label="涨跌额" width="100">
               <template #default="scope">
-                <span :class="parseFloat(scope.row.change || 0) > 0 ? 'text-success' : 'text-danger'">
-                  {{ scope.row.change || 'N/A' }}
+                <span :class="parseFloat(scope.row.change) > 0 ? 'text-success' : 'text-danger'">
+                  {{ scope.row.change }}
                 </span>
               </template>
             </el-table-column>
             <el-table-column prop="changePercent" label="涨跌幅" width="100">
               <template #default="scope">
-                <span :class="parseFloat(scope.row.changePercent || scope.row['change percent'] || 0) > 0 ? 'text-success' : 'text-danger'">
-                  {{ scope.row.changePercent || scope.row['change percent'] || 'N/A' }}
+                <span :class="parseFloat(scope.row.changePercent) > 0 ? 'text-success' : 'text-danger'">
+                  {{ scope.row.changePercent }}
                 </span>
               </template>
             </el-table-column>
-            <el-table-column label="日内范围" width="150">
-              <template #default="scope">
-                {{ `${scope.row.low || 'N/A'} - ${scope.row.high || 'N/A'}` }}
-              </template>
-            </el-table-column>
+            <el-table-column prop="marketCap" label="市值" width="120" />
+            <el-table-column prop="peRatio" label="市盈率" width="100" />
             <el-table-column prop="volume" label="成交量" width="120">
               <template #default="scope">
-                {{ parseInt(scope.row.volume || 0)?.toLocaleString() || 'N/A' }}
-              </template>
-            </el-table-column>
-            <el-table-column label="更新时间" width="180">
-              <template #default="scope">
-                {{ scope.row['latest trading day'] || 'N/A' }}
-              </template>
-            </el-table-column>
-            <el-table-column label="开盘价" width="100">
-              <template #default="scope">
-                {{ scope.row.open || 'N/A' }}
-              </template>
-            </el-table-column>
-            <el-table-column label="昨收价" width="100">
-              <template #default="scope">
-                {{ scope.row['previous close'] || 'N/A' }}
+                {{ scope.row.volume.toLocaleString() }}
               </template>
             </el-table-column>
           </el-table>
@@ -220,13 +198,18 @@
             stripe
           >
             <el-table-column prop="symbol" label="代码" width="80" fixed />
-            <el-table-column prop="name" label="名称" width="150" fixed />
+            <el-table-column prop="name" label="名称" width="180" fixed />
+            <el-table-column prop="price" label="价格" width="100" />
+            <el-table-column prop="changePercent" label="涨跌幅" width="100">
+              <template #default="scope">
+                <span :class="parseFloat(scope.row.changePercent) > 0 ? 'text-success' : 'text-danger'">
+                  {{ scope.row.changePercent }}
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column prop="pe" label="市盈率(TTM)" width="120" />
-            <el-table-column prop="forwardPE" label="预期市盈率" width="120" />
-            <el-table-column prop="eps" label="每股收益" width="120" />
-            <el-table-column prop="dividend" label="股息率" width="100" />
-            <el-table-column prop="fiftyTwoWeekRange" label="52周范围" width="150" />
-            <el-table-column prop="averageVolume" label="3个月平均成交量" width="180" />
+            <el-table-column prop="marketCap" label="市值" width="120" />
+            <el-table-column prop="volume" label="成交量" width="120" />
           </el-table>
         </el-tab-pane>
       </el-tabs>
@@ -698,137 +681,116 @@ const stockLoading = ref(false)
 const stockChartData = ref({ xAxis: [], series: [] })
 const stockIndicators = ref([]) // 添加股票指标数据
 
-// 获取股票数据 - 使用真实API
+// 获取股票数据 - 使用本地API
 const fetchStockData = async () => {
   stockLoading.value = true
   try {
-    // 扩展股票列表，添加更多知名公司
-    const symbols = [
-      'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META', 
-      'TSLA', 'NVDA', 'JPM', 'V', 'WMT', 
-      'JNJ', 'PG', 'BABA', 'TSM', 'ORCL'
-    ];
-    const apiKey = 'BR3MCQ268E2X7TR9';
+    // 使用本地API获取股票数据
+    const response = await fetch('http://127.0.0.1:8000/api/stocks/quotes');
+    const result = await response.json();
     
-    const stocksData = await Promise.all(
-      symbols.map(async (symbol) => {
-        const response = await fetch(
-          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${apiKey}`
-        );
-        const data = await response.json();
-        
-        // 检查是否有Global Quote数据
-        if (data['Global Quote']) {
-          // 直接返回API返回的数据结构，保留原始字段名
-          return {
-            symbol: data['Global Quote']['01. symbol'],
-            open: data['Global Quote']['02. open'],
-            high: data['Global Quote']['03. high'],
-            low: data['Global Quote']['04. low'],
-            price: data['Global Quote']['05. price'],
-            volume: data['Global Quote']['06. volume'],
-            'latest trading day': data['Global Quote']['07. latest trading day'],
-            'previous close': data['Global Quote']['08. previous close'],
-            change: data['Global Quote']['09. change'],
-            'change percent': data['Global Quote']['10. change percent'],
-            // 添加一些额外字段用于显示
-            shortName: symbol, // 可以添加公司名称映射
-            displayName: getCompanyName(symbol)
-          };
-        } else {
-          // 处理API错误或限制
-          console.warn(`无法获取${symbol}的数据，可能达到API调用限制`);
-          return {
-            symbol: symbol,
-            shortName: symbol,
-            displayName: getCompanyName(symbol),
-            price: 'N/A',
-            change: 'N/A',
-            'change percent': 'N/A'
-          };
-        }
-      })
-    );
-    
-    stockData.value = stocksData;
-    prepareStockChartData(stocksData);
-    
+    if (result.data && result.data.length > 0) {
+      stockData.value = result.data.map(stock => ({
+        symbol: stock.symbol,
+        name: stock.name,
+        price: stock.price,
+        change: (stock.price * stock.change_percent / 100).toFixed(2),
+        changePercent: stock.change_percent.toFixed(2) + '%',
+        marketCap: formatMarketCap(stock.market_cap),
+        peRatio: stock.pe_ratio.toFixed(2),
+        volume: stock.volume,
+        currency: stock.currency
+      }));
+      
+      // 准备股票指标数据
+      stockIndicators.value = result.data.map(stock => ({
+        symbol: stock.symbol,
+        name: stock.name,
+        pe: stock.pe_ratio.toFixed(2),
+        marketCap: formatMarketCap(stock.market_cap),
+        volume: stock.volume.toLocaleString(),
+        price: stock.price.toFixed(2),
+        changePercent: stock.change_percent.toFixed(2) + '%'
+      }));
+      
+      // 准备图表数据
+      prepareStockChartData(stockData.value);
+      
+      console.info('使用本地API获取的股票数据', stockData.value);
+    } else {
+      throw new Error('未获取到股票数据');
+    }
   } catch (error) {
     console.error('获取股票数据失败', error);
-    ElMessage.error('获取股票数据失败，请检查API配置');
-    // 暂时使用模拟数据
+    ElMessage.error('获取股票数据失败，使用模拟数据');
+    // 使用模拟数据
     useStockMockData();
   } finally {
     stockLoading.value = false;
   }
 };
 
-// 添加公司名称映射函数
-const getCompanyName = (symbol) => {
-  const companyNames = {
-    'AAPL': 'Apple Inc.',
-    'MSFT': 'Microsoft Corporation',
-    'GOOGL': 'Alphabet Inc.',
-    'AMZN': 'Amazon.com Inc.',
-    'META': 'Meta Platforms Inc.',
-    'TSLA': 'Tesla Inc.',
-    'NVDA': 'NVIDIA Corporation',
-    'JPM': 'JPMorgan Chase & Co.',
-    'V': 'Visa Inc.',
-    'WMT': 'Walmart Inc.',
-    'JNJ': 'Johnson & Johnson',
-    'PG': 'Procter & Gamble Co.',
-    'BABA': 'Alibaba Group Holding Ltd.',
-    'TSM': 'Taiwan Semiconductor Manufacturing Co.',
-    'ORCL': 'Oracle Corporation'
-  };
+// 格式化市值显示
+const formatMarketCap = (value) => {
+  if (!value) return 'N/A';
   
-  return companyNames[symbol] || symbol;
+  if (value >= 1000000000000) {
+    return (value / 1000000000000).toFixed(2) + '万亿';
+  } else if (value >= 1000000000) {
+    return (value / 1000000000).toFixed(2) + '十亿';
+  } else if (value >= 1000000) {
+    return (value / 1000000).toFixed(2) + '百万';
+  } else {
+    return value.toLocaleString();
+  }
 };
 
-// 修改图表数据准备函数，适应新的数据结构
+// 修改图表数据准备函数
 const prepareStockChartData = (stocks) => {
-  // 提取股票名称和多个关键指标
-  const stockNames = stocks.map(stock => stock.shortName || stock.displayName || stock.symbol);
-  const currentPrices = stocks.map(stock => parseFloat(stock.price || 0) || 0);
-  const dayChanges = stocks.map(stock => {
-    const changePercent = stock['change percent'];
-    if (!changePercent) return 0;
-    return parseFloat(changePercent.replace('%', '')) || 0;
-  });
+  // 提取股票名称和价格数据
+  const stockSymbols = stocks.map(stock => stock.symbol);
+  const currentPrices = stocks.map(stock => stock.price);
+  const changePercents = stocks.map(stock => parseFloat(stock.changePercent));
   
-  // 设置多维度股票数据图表
+  // 设置股票数据图表 - 确保数据结构与BarChart组件期望的格式一致
   stockChartData.value = {
-    xAxis: stockNames,
+    xAxis: stockSymbols,
     series: [
       {
         name: '当前价格($)',
         data: currentPrices,
         type: 'bar'
-      },
-      {
-        name: '日涨跌幅(%)',
-        data: dayChanges,
-        type: 'line',
-        lineStyle: {
-          width: 3
-        },
-        itemStyle: {
-          color: function(params) {
-            return params.value >= 0 ? '#67C23A' : '#F56C6C';
-          }
-        }
       }
-    ],
-    yAxis: {
-      type: 'value',
-      axisLabel: {
-        formatter: '{value}'
-      }
-    }
+    ]
   };
+  
+  // 打印数据结构以便调试
+  console.log('股票图表数据:', stockChartData.value);
 };
 
+// 使用模拟股票数据
+const useStockMockData = () => {
+  const mockStocks = [
+    { symbol: 'AAPL', name: 'Apple Inc.', price: 202.09, changePercent: '-2.31%', marketCap: '3.02万亿', peRatio: '31.53', volume: 58857268, currency: 'USD' },
+    { symbol: 'MSFT', name: 'Microsoft Corporation', price: 452.57, changePercent: '-1.22%', marketCap: '3.36万亿', peRatio: '35.03', volume: 18399615, currency: 'USD' },
+    { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 178.35, changePercent: '0.85%', marketCap: '2.21万亿', peRatio: '27.12', volume: 22563214, currency: 'USD' },
+    { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 185.67, changePercent: '-0.45%', marketCap: '1.92万亿', peRatio: '42.78', volume: 31256987, currency: 'USD' },
+    { symbol: 'META', name: 'Meta Platforms Inc.', price: 512.45, changePercent: '1.23%', marketCap: '1.31万亿', peRatio: '29.45', volume: 15698745, currency: 'USD' }
+  ];
+  
+  stockData.value = mockStocks;
+  stockIndicators.value = mockStocks.map(stock => ({
+    symbol: stock.symbol,
+    name: stock.name,
+    pe: stock.peRatio,
+    marketCap: stock.marketCap,
+    volume: parseInt(stock.volume).toLocaleString(),
+    price: stock.price.toFixed(2),
+    changePercent: stock.changePercent
+  }));
+  
+  prepareStockChartData(mockStocks);
+};
 onMounted(() => {
   fetchAllData()
 })
